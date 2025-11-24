@@ -1,0 +1,355 @@
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(#0093d8, #ffffff);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Tuyết rơi toàn màn hình */
+.snow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../css/img/snow1.png"), url("../css/img/snow2.png"), url("../css/img/snow3.png");
+  animation: snow 12s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes snow {
+  0% {
+    background-position: 0px 0px, 0px 0px, 0px 0px;
+  }
+
+  50% {
+    background-position: 300px 500px, -150px 300px, 150px 400px;
+  }
+
+  100% {
+    background-position: 600px 1000px, -300px 600px, 300px 800px;
+  }
+}
+
+/* Nền đất phủ tuyết */
+.bottom_snow {
+  position: absolute;
+  bottom: 0;
+  /* luôn nằm dưới cùng */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 150px;
+  /* độ cao lớp tuyết */
+  background: linear-gradient(to top, #ffffff 0%, #e2e2e2 100%);
+  border-radius: 50% 50% 0 0;
+  z-index: 1;
+  /* dưới cây và quà */
+  box-shadow: 0 -10px 30px rgba(255, 255, 255, 0.3) inset;
+  /* tạo độ mềm cho tuyết */
+}
+
+/* Thêm hiệu ứng gợn tuyết */
+.bottom_snow {
+  position: absolute;
+  bottom: -20px;
+  /* lùi xuống một chút để phủ lên gốc cây */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 200px;
+  /* cao hơn để phủ gốc cây và quà */
+  background: #ffffff;
+  border-radius: 50% 50% 0 0;
+  z-index: 2;
+  /* nằm trên nền nhưng dưới cây/quà */
+  box-shadow: 0 -10px 30px rgba(255, 255, 255, 0.3) inset;
+}
+
+/* Thêm các gợn tuyết */
+.bottom_snow::before,
+.bottom_snow::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 700px;
+  height: 230px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.bottom_snow::before {
+  left: 2px;
+}
+
+.bottom_snow::after {
+  right: 2px;
+}
+
+/* Người tuyết bên trái */
+.snowman {
+  position: absolute;
+  left: 120px;
+  bottom: 170px;
+  width: 120px;
+  /* Chiều rộng ảnh */
+  z-index: 2;
+}
+
+.snowman img {
+  width: 300px;
+  /* Ảnh sẽ tự co theo div */
+  height: auto;
+  display: block;
+}
+
+
+/* Cây thông bên phải */
+.tree-container {
+  position: absolute;
+  right: 200px;
+  bottom: 80px;
+  width: 300px;
+  /* chiều rộng của ảnh */
+  height: auto;
+  /* tự co chiều cao */
+  z-index: 2;
+}
+
+.tree-container img.tree-img {
+  width: 400px;
+  /* co theo div */
+  height: auto;
+  display: block;
+}
+
+
+/* Div ngoài cùng: khung chứa ảnh */
+.image-container {
+  position: relative;
+  bottom: 40px;
+  width: 1100px;
+  /* giới hạn chiều rộng ảnh */
+  height: 900px;
+  /* giới hạn chiều cao ảnh */
+  background-image: url('../css/img/nhanonl.png');
+  /* ảnh nền */
+  background-size: cover;
+  background-position: center;
+  /* form không ra ngoài div */
+}
+
+/* Form nằm trên ảnh */
+.form {
+  position: absolute;
+  top: 520px;
+  left: 48.5%;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  padding: 2em;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Style tiêu đề */
+#heading {
+  font-size: 1.7em;
+  margin-bottom: 1em;
+  text-align: center;
+  font-weight: bold;
+
+  /* ánh sáng nhẹ */
+  text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Input field */
+.field {
+  width: 100%;
+  margin-bottom: 1em;
+  display: flex;
+
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.6em;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.input-field {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: none;
+  color: white;
+  font-size: 16px;
+}
+
+/* Button */
+.btn {
+  display: flex;
+  flex-direction: column;
+  /* đặt các nút xếp dọc */
+  gap: 0.8em;
+  width: 100%;
+  left: 20px;
+  margin-bottom: 1em;
+  align-items: center;
+}
+
+/* Cả 2 nút Login & Register */
+.button1,
+.button2 {
+  width: 100%;
+  /* Cả hai cùng bằng nhau */
+  padding: 0.6em 1.4em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: 0.25s;
+  margin-left: 15px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Nền gradient riêng cho từng nút */
+.button1 {
+  background: linear-gradient(135deg, #9dd2ee, #5497cb);
+}
+
+.button2 {
+  background: linear-gradient(135deg, #cd7771, #aa6767);
+}
+
+.button1:hover {
+  background: linear-gradient(135deg, #03a9f4, #0277bd);
+  transform: scale(1.05);
+}
+
+.button2:hover {
+  background: linear-gradient(135deg, #e57373, #c62828);
+  transform: scale(1.05);
+}
+
+
+/* Link QUÊN MẬT KHẨU */
+.link {
+  width: 100%;
+  text-align: right;
+  margin-bottom: 1em;
+  font-size: 14px;
+
+}
+
+.link a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  transition: 0.25s;
+}
+
+.link a:hover {
+  color: #81d4fa;
+  text-decoration: underline;
+}
+
+
+/* Form Đăng Ký */
+.register-form {
+  top: 570px;
+  /* ví dụ bạn muốn đẩy lên cao hơn */
+  left: 48.43%;
+  /* ví dụ căn giữa */
+  transform: translate(-50%, -50%);
+  width: 25%;
+  /* có thể rộng hơn login nếu muốn */
+}
+
+.register-btn {
+  display: flex;
+  justify-content: flex-end;
+  /* căn nút sang phải */
+  margin-bottom: 1em;
+  width: 100%;
+  /* cho nút nằm sát bên phải */
+}
+
+/* Chỉ căn giữa link dưới nút */
+.register-link {
+  width: 100%;
+  text-align: center;
+  /* căn giữa text */
+  font-size: 14px;
+}
+
+.register-link a {
+  text-decoration: none;
+  color: lightblue;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  color: #81d4fa;
+}
+
+/* Form Quên Mật Khẩu */
+.forgot-form {
+  position: absolute;
+  top: 565px;
+  /* vị trí có thể chỉnh tuỳ ý */
+  left: 535px;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  padding: 2em;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Nút căn giữa */
+.forgot-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+/* Thông báo đường dẫn / lỗi */
+.message {
+  text-align: center;
+  margin-top: 0.5em;
+  font-size: 14px;
+  color: #c9d521;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0%;
+  /* khoảng cách từ mép trên */
+  right: 125px;
+  /* sát bên phải */
+  font-size: 22px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #ffdede;
+  transform: scale(1.2);
+}
