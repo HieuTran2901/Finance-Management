@@ -1,8 +1,10 @@
 <?php
-$host = 'localhost:3307'; 
-$username = 'root';
-$password = ''; 
-$database = 'dangkydangnhap1';
+require_once __DIR__ . "/../Api/apiconfig.php";
+
+$host = $_ENV['DB_HOST'];
+$username = $_ENV['DB_USER'];
+$password = $_ENV['DB_PASS'];
+$database = $_ENV['DB_NAME'];
 
 $conn = new mysqli($host, $username, $password, $database);
 

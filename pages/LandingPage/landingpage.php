@@ -34,7 +34,7 @@
                 <a href="#pricing" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200">Gói dịch vụ</a>
                 <a href="#testimonials" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200">Đánh giá</a> <!-- Thêm mục mới -->
                 <a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-200">Liên hệ</a>
-                <a href="../../dangkydangnhap/login.php" class="bg-indigo-600 text-white px-5 py-2 rounded-full hover:bg-indigo-700 transition duration-200 shadow-md">Đăng nhập</a> <!-- Nút bo tròn -->
+                <a href="../login.php" class="bg-indigo-600 text-white px-5 py-2 rounded-full hover:bg-indigo-700 transition duration-200 shadow-md">Đăng nhập</a> <!-- Nút bo tròn -->
             </nav>
         </div>
     </header>
