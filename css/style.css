@@ -18,7 +18,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../css/img/snow1.png"), url("../css/img/snow2.png"), url("../css/img/snow3.png");
+  background-image: url("../css/img/snow1.png"), url("../css/img/snow2.png"),
+    url("../css/img/snow3.png");
   animation: snow 12s linear infinite;
   pointer-events: none;
   z-index: 1;
@@ -110,7 +111,6 @@ body {
   display: block;
 }
 
-
 /* Cây thông bên phải */
 .tree-container {
   position: absolute;
@@ -130,7 +130,6 @@ body {
   display: block;
 }
 
-
 /* Div ngoài cùng: khung chứa ảnh */
 .image-container {
   position: relative;
@@ -139,7 +138,7 @@ body {
   /* giới hạn chiều rộng ảnh */
   height: 900px;
   /* giới hạn chiều cao ảnh */
-  background-image: url('../css/img/nhanonl.png');
+  background-image: url("../css/img/nhanonl.png");
   /* ảnh nền */
   background-size: cover;
   background-position: center;
@@ -159,7 +158,6 @@ body {
   flex-direction: column;
   align-items: center;
 }
-
 
 /* Style tiêu đề */
 #heading {
@@ -193,6 +191,10 @@ body {
   background: none;
   color: white;
   font-size: 16px;
+}
+
+.input-field::placeholder {
+  color: #fff;
 }
 
 /* Button */
@@ -243,14 +245,12 @@ body {
   transform: scale(1.05);
 }
 
-
 /* Link QUÊN MẬT KHẨU */
 .link {
   width: 100%;
   text-align: right;
   margin-bottom: 1em;
   font-size: 14px;
-
 }
 
 .link a {
@@ -264,7 +264,6 @@ body {
   color: #81d4fa;
   text-decoration: underline;
 }
-
 
 /* Form Đăng Ký */
 .register-form {

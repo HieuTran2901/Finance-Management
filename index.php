@@ -1,6 +1,7 @@
 <?php
     include './Func/Get_Session.php';
     include "./pages/Sidebar/Sidebar.php";
+    require_once './Func/Notification.php';
 
     $sessionData = Get_Session('./module/config.php', './pages/LandingPage/landingpage.php');
     // Lấy dữ liệu người dùng và kết nối từ session
@@ -408,6 +409,9 @@
     </main>
   </div>
 </body>
+<?php
+  Notification_Notyf('login', 'Đăng nhập thành công! Xin chào "'.$users['username'].'"', 'Tài khoản hoặc mật khẩu không đúng!');
+?>
 
 <?php
 $months = [

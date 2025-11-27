@@ -1,9 +1,10 @@
 <?php
 session_start();
 require_once '../module/config.php';
+require_once '../Func/Notification.php';
 
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header("Location: login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -27,13 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['logged_in'] = true;
                 $_SESSION['username'] = $username;
                 $_SESSION['user_id'] = $id;
-                header("Location: ../index.php");
+                header("Location: ../index.php?login=success");
                 exit;
             } else {
-                $error = "Sai mật khẩu!";
+                $error = "Tài khoản hoặc mật khẩu không đúng!";
+                header("Location: login.php?login=error"); 
             }
         } else {
             $error = "Tài khoản không tồn tại!";
+            header("Location: login.php?login=error");
         }
 
         $stmt->close();
@@ -58,12 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Người tuyết bên trái -->
     <div class="snowman">
-        <img src="../css/snowman.png" alt="Người tuyết">
+        <img src="../css/img/snowman.png" alt="Người tuyết">
     </div>
 
     <!-- Cây thông -->
     <div class="tree-container">
-        <img src="../css/christmas_tree.png" alt="Cây thông" class="tree-img">
+        <img src="../css/img/christmas_tree.png" alt="Cây thông" class="tree-img">
     </div>
 
     <div class="image-container">
@@ -77,17 +80,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input class="input-field" type="password" name="password" placeholder="Mật khẩu" required>
                 </div>
                 <div class="link">
-                <a href="forgot_password.php">Quên mật khẩu?</a>
-            </div>
+                    <a href="forgot_password.php">Quên mật khẩu?</a>
+                </div>
+                <div class="error-message">
+                    <?php if ($error !== ''): ?>
+                        <p><?php echo htmlspecialchars($error); ?></p>
+                    <?php endif; ?>
+                </div>
                 <div class="btn">
                     <button class="button1" type="submit">Đăng nhập</button> 
                 </div>
             </form>
             <button class="button2" type="submit" onclick="window.location.href='register.php'">Đăng ký</button>
         </div>
-    </div>
-
-
+    </div> 
+    <?php 
+        Notification_Notyf('login', null, 'Tài khoản hoặc mật khẩu không đúng!');
+    ?>
 </body>
 </html>
 
