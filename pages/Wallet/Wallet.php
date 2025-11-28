@@ -1,3 +1,18 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../module/config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../dangkydangnhap/login.php");
+    exit();
+}
+
+$username = $_SESSION['username'] ?? 'User';
+$user_id = $_SESSION['user_id'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,52 +24,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="bg-gray-100 font-sans">
-  <div class="flex min-h-screen">
+<div class="flex min-h-screen pl-64">
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-md p-4">
-      <div class="text-2xl font-bold flex items-center gap-2 mb-6">
-        <img src="https://img.icons8.com/ios/50/wallet--v1.png" class="w-6 h-6" alt="Logo"/>
-        finmanager
-      </div>
-      <div class="mb-6">
-        <div class="flex items-center gap-2">
-          <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center">M</div>
-          <span class="font-medium">Mia</span>
-        </div>
-      </div>
-      <nav class="space-y-3 text-gray-700">
-        <a href="../../index.php" class="flex items-center gap-2 p-2 rounded-md font-medium">
-          <span><i class="fa-solid fa-house"></i></span> Dashboard
-        </a>
-        <a href="#" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md">
-          <i class="fa-solid fa-map-pin"></i> Pinned
-        </a>
-        <a href="#" class="flex items-center bg-gray-100 gap-2 p-2 hover:bg-gray-100 rounded-md">
-          <i class="fa-solid fa-wallet"></i> Wallets
-        </a>
-        <a href="../Transction/Transaction.php" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md">
-          <i class="fa-regular fa-money-bill-1"></i> Transactions
-        </a>
-        <a href="#" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md">
-          <i class="fa-solid fa-bullseye"></i> Budgets & Goals
-        </a>
-        <a href="#" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md">
-          <i class="fa-solid fa-clock-rotate-left"></i> Recurring
-        </a>
-      </nav>
-    </aside>
+    <?php include __DIR__ . '/../Sidebar/Sidebar_2.php'; ?>
 
     <!-- Main content -->
      
     <main class="flex-1 p-6">
       <?php
-          session_start();
           require_once __DIR__ . '/../../module/config.php';
           $user_id = $_SESSION['user_id']; // Giả sử bạn đã lưu user_id khi đăng nhập
-          if (!isset($_SESSION['user_id'])) {
-              die("Vui lòng đăng nhập trước.");
-             
-          }
           
           
           
