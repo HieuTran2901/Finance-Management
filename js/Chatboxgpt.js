@@ -98,7 +98,7 @@ form.addEventListener("submit", async (e) => {
   if (imageFile) formData.append("image", imageFile);
 
   try {
-    const res = await fetch("./module/handle.php", {
+    const res = await fetch("./Func/AI_Assistant.php", {
       method: "POST",
       body: formData,
     });

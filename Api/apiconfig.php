@@ -17,4 +17,5 @@
     // Lấy biến môi trường
     $apiKey = $_ENV['OPENROUTER_API_KEY']; // API key của openrouter
     $referer = $_ENV['URL_REFERER'];
+    $modal_AI = $_ENV['MODAL_AI'] ?? 'meta-llama/llama-3.3-70b-instruct'; // Mô hình AI mặc định
 ?>
