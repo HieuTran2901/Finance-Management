@@ -28,7 +28,7 @@
   <title>Transaction</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../../css/fadein.css">
 
 </head>
 <!-- thông báo -->
@@ -367,11 +367,9 @@
 </script>
 
 <!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
 
 <!-- Custom Scripts (Modal & Chart) -->
 <script src="../../js/Modal.js"></script>
-<script src="../../js/Chart.js"></script>
 <script>
   function openTransactionForm() {
     document.getElementById('transactionForm').classList.remove('hidden');

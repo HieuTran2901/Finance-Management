@@ -28,8 +28,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wallet</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../../css/index.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="../../css/fadein.css">
 </head>
 <!-- thông báo -->
 <div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
@@ -43,43 +44,12 @@
 <body class="bg-gray-100 font-sans">
   <div class="flex min-h-screen pl-64">
     <!-- Sidebar -->
-    <aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 shadow-lg flex flex-col justify-between z-10">
-  <!-- Phần trên cùng -->
-  <div class="p-6">
-    <!-- Logo -->
-    <div class="flex items-center gap-2 mb-8">
-      <img src="https://img.icons8.com/ios/50/wallet--v1.png" class="w-7 h-7" alt="Logo" />
-      <span class="text-xl font-bold text-gray-800">FinManager</span>
-    </div>
-
-    <!-- User -->
-    <div class="flex items-center gap-3 mb-8">
-      <div class="w-10 h-10 bg-green-500 text-white flex items-center justify-center rounded-full font-bold text-sm">
-        <?= strtoupper(substr($users['username'], 0, 1)) ?>
-      </div>
-      <div class="leading-4">
-        <p class="text-gray-800 font-semibold"><?= htmlspecialchars($users['username']) ?></p>
-        <p class="text-gray-500 text-sm">Tài khoản cá nhân</p>
-      </div>
-    </div>
-
-    <!-- Danh sách menu -->
     <?php
       $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
       renderSidebar($users, $currentPage, "../../pages","../../index.php","../../dangkydangnhap/logout.php");
     ?>
-  </div>
 
-  <!-- Đăng xuất -->
-  <div class="p-6 border-t border-gray-200">
-    <a href="../../dangkydangnhap/logout.php" class="flex items-center gap-3 text-red-500 hover:text-red-600 font-medium transition">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-    </a>
-  </div>
-</aside>
-
-    <!-- Main content -->
-     
+    <!-- Main content --> 
     <main class="flex-1 p-6">
       <?php     
           // Truy vấn tags
@@ -236,7 +206,7 @@
                         </div>
 
                         <!-- Mặt sau -->
-                      `<div class="absolute inset-0 bg-gray-800 text-white rounded-xl shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col overflow-hidden">
+                      <div class="absolute inset-0 bg-gray-800 text-white rounded-xl shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col overflow-hidden">
 
                           <!-- Dải từ (Magnetic Stripe) -->
                           <div class="h-10 bg-black mt-5 w-full"></div>
@@ -277,7 +247,7 @@
                           <div class="p-4 text-center text-xs text-gray-500 border-t border-gray-700">
                               Ứng dụng Tài chính của bạn © 2025
                           </div>
-                      </div>`
+                      </div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -391,12 +361,11 @@
   });
 </script>
 
-<!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
 
 <!-- Custom Scripts (Modal & Chart) -->
 <script src="../../js/Modal.js"></script>
-<script src="../../js/Chart.js"></script>
+
+
 </html>
 
 

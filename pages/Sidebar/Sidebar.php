@@ -6,7 +6,7 @@ function renderSidebar($users, $currentPage, $baseUrl, $indexUrl, $logoutUrl) {
         ["$baseUrl/Wallet/Wallet.php", 'fa-wallet', 'Wallet'],
         ["$baseUrl/Transction/Transaction.php", 'fa-arrow-right-arrow-left', 'Transaction'],
         ["$baseUrl/Group/group.php", 'fa-users', 'Group'],
-        ["#", 'fa-chart-pie', 'Report', 'js-coming-soon'],
+        ["javascript:void(0)", 'fa-chart-pie', 'Report', 'js-coming-soon'],  // dùng javascript:void(0) để không chuyển trang
         ["$baseUrl/Goals/Goals.php", 'fa-bullseye', 'Goals'],
     ];
 

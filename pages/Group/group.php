@@ -5,12 +5,12 @@ include '../Sidebar/Sidebar.php';
 $sessionData = Get_Session('../../module/config.php', '../../dangkydangnhap/login.php');
 $conn = $sessionData['conn'];
 $users = $sessionData['user'];
+$user_id = $sessionData['user_id'];
 
 if (!isset($_SESSION['user_id'])) {
   die("Vui lòng đăng nhập trước.");
 }
 
-$user_id = $_SESSION['user_id'];
 $create_message = '';
 // Lấy tên user
 $sql_user = $conn->prepare("SELECT username FROM Users WHERE id = ?");
@@ -98,10 +98,9 @@ foreach ($data as &$group) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Group</title>
   <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/fadein.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .scrollbar-thin {
@@ -278,10 +277,5 @@ foreach ($data as &$group) {
   });
 </script>
 
-<!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
-
-<!-- Custom Scripts (Modal & Chart) -->
 <script src="../../js/Modal.js"></script>
-<script src="../../js/Chart.js"></script>
 </html>
