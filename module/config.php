@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../Api/apiconfig.php";
 
-$host = $_ENV['DB_HOST'] . ":3307";
+$host = $_ENV['DB_HOST'];
 $username = $_ENV['DB_USER'];
 $password = $_ENV['DB_PASS'];
 $database = $_ENV['DB_NAME'];

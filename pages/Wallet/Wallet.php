@@ -1,16 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/../../module/config.php';
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dangkydangnhap/login.php");
-    exit();
-}
-
-$username = $_SESSION['username'] ?? 'User';
-$user_id = $_SESSION['user_id'];
+  require_once '../../Func/Get_Session.php';
+  require_once '../Sidebar/Sidebar.php';
+  $sessionData = Get_Session('../../module/config.php','../../index.php');
+  $users = $sessionData['user'];
+  $conn = $sessionData['conn'];
+  $user_id = $users['id'];
 ?>
 
 <!DOCTYPE html>
@@ -24,20 +18,19 @@ $user_id = $_SESSION['user_id'];
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body class="bg-gray-100 font-sans">
-<div class="flex min-h-screen pl-64">
-
+  <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <?php include __DIR__ . '/../Sidebar/Sidebar_2.php'; ?>
+    <aside class="w-64 bg-white shadow-md p-4">
+    <?php
+      $currentPage = $_SERVER['PHP_SELF'];
+      renderSidebar($users, $currentPage , '..','../../index.php','../logout.php');
+    ?>
+    </aside>
 
     <!-- Main content -->
      
     <main class="flex-1 p-6">
-      <?php
-          require_once __DIR__ . '/../../module/config.php';
-          $user_id = $_SESSION['user_id']; // Giả sử bạn đã lưu user_id khi đăng nhập
-          
-          
-          
+      <?php   
           // Truy vấn tags
           $sql = "
           SELECT 
@@ -70,8 +63,6 @@ $user_id = $_SESSION['user_id'];
           $result_wallets = $stmt_wallets->get_result();
           $wallets = $result_wallets->fetch_all(MYSQLI_ASSOC);
           
-
-
           // $sql_used = "
           //             SELECT 
           //               Transactions.wallet_id,
@@ -92,7 +83,6 @@ $user_id = $_SESSION['user_id'];
           //           }
 
           // ?>
-
       <?php
       // Lấy thông tin ví của người dùng
       

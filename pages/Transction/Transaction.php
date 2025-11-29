@@ -1,17 +1,14 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/../../module/config.php';
+  require_once "../../Func/Get_Session.php";
+  require_once "../Sidebar/Sidebar.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dangkydangnhap/login.php");
-    exit();
-}
-
-$username = $_SESSION['username'] ?? 'User';
-$user_id = $_SESSION['user_id'];
+  $sessionData = Get_Session('../../module/config.php', '../pages/Login/Login.php');
+  $users = $sessionData['user'];
+  $conn = $sessionData['conn'];
+  $user_id = $sessionData['user_id'];
+  
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,14 +22,16 @@ $user_id = $_SESSION['user_id'];
 </head>
 <body class="bg-gray-100 font-sans">
   <div class="flex min-h-screen">
-
-    <!-- Sidebar -->
-    <?php include __DIR__ . '/../Sidebar/Sidebar_2.php'; ?>
-
-<div class="flex-1 p-6 space-y-6">
+  <aside class="w-64 fixed left-0 top-0 h-full bg-white shadow-lg p-6">
+    <?php
+      $currentPage = $_SERVER['PHP_SELF'];
+      renderSidebar($users, $currentPage , '..','../../index.php','../logout.php');
+    ?>
+  </aside>
+  <div class="flex-1 ml-64 p-6 space-y-6">
+    
     <?php
       // Lấy thông tin ví của người dùng
-          require_once __DIR__ . '/../../module/config.php';
       $user_id = $_SESSION['user_id']; // Giả sử bạn đã lưu user_id khi đăng nhập
           if (!isset($_SESSION['user_id'])) {
               die("Vui lòng đăng nhập trước.");
