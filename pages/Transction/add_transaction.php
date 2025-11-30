@@ -116,9 +116,9 @@ while ($row = $tags_result->fetch_assoc()) {
   <title>Thêm Giao Dịch</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+<body class="bg-transparent p-4">
   <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow w-full max-w-2xl space-y-4">
-    <h2 class="text-2xl font-bold text-center mb-4">Thêm Giao Dịch</h2>
+   <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">Thêm Giao Dịch</h1>
 
     <div>
       <label class="block font-medium mb-1">Tên danh mục</label>
@@ -178,10 +178,21 @@ while ($row = $tags_result->fetch_assoc()) {
       </datalist>
     </div>
 
-    <div class="flex justify-between">
-        <a href="Transaction.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Huỷ</a>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lưu giao dịch</button>
-    </div>
+        <div class="flex gap-4 justify-end pt-4">
+            <button type="button" onclick="window.parent.closeAddTransactionModal()"
+            class="px-4 py-2 rounded text-white font-semibold
+                    bg-gradient-to-r from-red-500 to-red-700
+                    hover:from-red-600 hover:to-red-800 transition">
+            Huỷ
+            </button>
+
+            <button type="submit"
+            class="px-4 py-2 rounded text-white font-semibold
+                    bg-gradient-to-r from-blue-500 to-blue-700
+                    hover:from-blue-600 hover:to-blue-800 transition">
+            Lưu giao dịch
+            </button>
+        </div>
   </form>
 </body>
 </html>
