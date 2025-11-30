@@ -130,27 +130,26 @@
       ?>
 
       <div class="bg-white rounded-md shadow p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold">Danh sách Ví</h2>
-          <form method="POST" action="" class="flex gap-2">
-            <input type="hidden" name="create_wallet" value="1">
-            <input type="text" name="name" id="wallet-name" placeholder="Tên ví" class="border px-2 py-1 rounded" required
-            oninvalid="this.setCustomValidity('Vui lòng nhập tên ví.')"
-            oninput="this.setCustomValidity('')">
-            <input type="text" name="type" placeholder="Loại ví" class="border px-2 py-1 rounded" required
-            oninvalid="this.setCustomValidity('Vui lòng nhập Loại ví.')"
-            oninput="this.setCustomValidity('')">
-            <input type="text" name="currency" placeholder="VNĐ, USD..." class="border px-2 py-1 rounded" required
-            oninvalid="this.setCustomValidity('Vui lòng nhập đơn vị tiền tệ.')"
-            oninput="this.setCustomValidity('')">
-            <input type="number" step="500" name="balance" id="wallet-balance" placeholder="Số dư" class="border px-2 py-1 rounded" required
-            oninvalid="this.setCustomValidity('Vui lòng nhập số tiền hợp lệ.')"
-            oninput="checkBalance(this)"
-            onkeypress="return event.key !== '-';" >
+        <!-- Nút Thêm Ví -->
+<div class="mb-6">
+    <!-- Tiêu đề căn giữa, chữ nổi bật -->
+    <h2 class="text-2xl font-bold text-center text-gray-900 drop-shadow-sm mb-3">
+        DANH SÁCH VÍ
+    </h2>
 
-            <button type="submit" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">Thêm</button>
-          </form>
-        </div>
+    <!-- Nút thêm nằm bên phải -->
+    <div class="flex justify-end">
+        <button onclick="openAddWalletModal()" 
+            class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700
+                   text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
+             Thêm Ví
+        </button>
+    </div>
+</div>
+
+
+
+
 
         <?php if (count($wallets) === 0): ?>
           <p>Không có ví nào.</p>
@@ -211,14 +210,22 @@
                           <!-- Dải từ (Magnetic Stripe) -->
                           <div class="h-10 bg-black mt-5 w-full"></div>
 
-                            <div class="absolute right-0 top-[-10px] flex justify-end mt-auto pt-4 border-t border-gray-700"> <!-- Thêm border-t để phân tách -->
-                                  <a href="../Wallet/edit_wallet.php?id=<?= $wallet['id'] ?>" class="inline-flex items-center text-blue-300 text-sm font-semibold ">
-                                      <i class="fas fa-edit"></i>
-                                  </a>
-                                  <a href="../Wallet/delete_wallet.php?id=<?= $wallet['id'] ?>" onclick="return confirm('Bạn có chắc muốn xoá ví này không? Toàn bộ giao dịch liên quan cũng sẽ bị xóa.')" class="inline-flex items-center px-3 py-1.5 rounded-md text-red-400 text-sm font-semibold shadow-sm">
-                                      <i class="fas fa-trash-alt"></i>
-                                  </a>
-                              </div>
+                            <div class="absolute right-0 top-[-10px] flex justify-end mt-auto pt-4 border-t border-gray-700">
+                              <a href="javascript:void(0)"
+                                onclick="openEditWalletModal(<?= $wallet['id'] ?>)"
+                                class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
+                                title="Chỉnh sửa">
+                                <i class="fas fa-edit"></i>
+                              </a>
+
+
+                              <a href="../Wallet/delete_wallet.php?id=<?= $wallet['id'] ?>"
+                                onclick="return confirm('Bạn có chắc muốn xoá ví này không? Toàn bộ giao dịch liên quan cũng sẽ bị xóa.')"
+                                class="inline-flex items-center px-3 py-1.5 text-red-400 text-sm font-semibold">
+                                  <i class="fas fa-trash-alt"></i>
+                              </a>
+                            </div>
+
 
                           <!-- Khu vực Mã bảo mật (CVV) / Chữ ký -->
                           <div class="bg-gray-700 mx-6 mt-4 p-3 rounded-lg flex flex-col">
@@ -256,13 +263,137 @@
         <?php endif; ?>
       </div>
       <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
-    <div class="flex justify-between items-center mb-6 border-b pb-4"> <!-- Thêm border-b và padding -->
-        <h2 class="text-2xl font-bold text-gray-800">Danh sách Thẻ (Tags)</h2> <!-- Tăng kích thước tiêu đề -->
-        <a href="add_tag.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200"> <!-- Nút "Thêm Tag" được làm đẹp -->
-            <i class="fas fa-plus text-sm"></i> Tạo Thẻ Mới
-        </a>
+        <div class="flex flex-col mb-6 border-b pb-4">
+            <!-- Tiêu đề ở giữa -->
+            <h2 class="text-3xl font-bold text-gray-900 drop-shadow-sm text-center mb-4">
+                DANH SÁCH THẺ (Tags)
+            </h2>
+
+            <!-- Nút thêm nằm bên phải dưới tiêu đề -->
+            <div class="flex justify-end">
+                <button onclick="openAddTagModal()" 
+                    class="bg-gradient-to-r from-indigo-500 to-indigo-700 
+                          hover:from-indigo-600 hover:to-indigo-800 
+                          text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
+                         Tạo Thẻ Mới
+                </button>
+            </div>
+        </div>
+
+
+    <!--MODAL -->
+
+    <!----------------------------------- ADD WALLET MODAL ---------------------------------->
+        <div id="addWalletModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
+            <iframe src="add_wallet.php" 
+            class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
+            loading="lazy"></iframe>
+        </div>
+        <script>
+          function openAddWalletModal() {
+            const modal = document.getElementById("addWalletModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeAddWalletModal() {
+            const modal = document.getElementById("addWalletModal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        </script>
+
+<!----------------------------------- EDIT WALLET MODAL ---------------------------------->
+        <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div class="w-full max-w-xl animate-popup">
+            <iframe 
+              src=""
+              id="editWalletFrame"
+              class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+
+        <script>
+        function openEditWalletModal(id) {
+          const modal = document.getElementById("editWalletModal");
+          const iframe = document.getElementById("editWalletFrame");
+
+          iframe.src = "../Wallet/edit_wallet.php?id=" + id;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+        }
+
+        function closeEditWalletModal() {
+          const modal = document.getElementById("editWalletModal");
+          const iframe = document.getElementById("editWalletFrame");
+
+          iframe.src = "";
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+        }
+        </script>
+
+    <!----------------------------------- ADD TAG MODAL ---------------------------------->
+    <div id="addTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
+      <div class="w-full max-w-xl animate-popup">
+
+        <!-- IFRAME CHỈ CÒN FORM, KHÔNG VIỀN, KHÔNG HEADER -->
+        <iframe 
+          src="add_tag.php"
+          class="w-full h-[90vh] border-none rounded-xl bg-transparent"
+          loading="lazy">
+        </iframe>
+
+      </div>
     </div>
 
+    <script>
+      function openAddTagModal() {
+        document.getElementById("addTagModal").classList.remove("hidden");
+        document.getElementById("addTagModal").classList.add("flex");
+      }
+
+      function closeAddTagModal() {
+        document.getElementById("addTagModal").classList.add("hidden");
+        document.getElementById("addTagModal").classList.remove("flex");
+      }
+    </script>
+
+    <!----------------------------------- EDIT TAG MODAL ---------------------------------->
+    <div id="editTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
+      <div class="w-full max-w-xl animate-popup">
+        <iframe 
+          src=""
+          id="editTagFrame"
+          class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+    <script>
+      function openEditTagModal(id) {
+        const modal = document.getElementById("editTagModal");
+        const iframe = document.getElementById("editTagFrame");
+
+        iframe.src = "edit_tag.php?id=" + id;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeEditTagModal() {
+        const modal = document.getElementById("editTagModal");
+        const iframe = document.getElementById("editTagFrame");
+
+        iframe.src = "";
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+    </script>
+     
     <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"> <!-- Bọc bảng trong container có bo tròn và đổ bóng -->
         <table class="min-w-full table-auto divide-y divide-gray-200"> <!-- Bỏ border của table, dùng divide-y -->
             <thead class="bg-gray-50"> <!-- Nền header nhẹ -->
@@ -313,9 +444,13 @@
                     </td>
 
                     <td class="px-4 py-3 text-center text-sm">
-                        <a href="edit_tag.php?id=<?= $row['tag_id'] ?>" class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150" title="Chỉnh sửa">
-                            <i class="fas fa-edit"></i>
+                        <a href="javascript:void(0)"
+                          onclick="openEditTagModal(<?= $row['tag_id'] ?>)"
+                          class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
+                          title="Chỉnh sửa">
+                          <i class="fas fa-edit"></i>
                         </a>
+
                         <a href="delete_tag.php?id=<?= $row['tag_id'] ?>" onclick="return confirm('Bạn có chắc muốn xoá thẻ này không?')" class="text-red-600 hover:text-red-800 font-medium mx-1.5 p-1 rounded-md hover:bg-red-50 transition-colors duration-150" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </a>
@@ -332,6 +467,8 @@
 
     </main>
   </div>
+  
+
 </body>
 </script>
 <!-- AOS Animation Library -->
@@ -382,4 +519,3 @@
     }
   }
 </script>
-

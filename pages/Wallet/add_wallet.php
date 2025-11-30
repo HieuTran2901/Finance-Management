@@ -8,32 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$wallet_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
 $errors = [];
 $name = '';
 $type = '';
 $balance = '';
 $currency = '';
-
-// 🔹 Lấy thông tin ví
-$stmt = $conn->prepare("SELECT * FROM Wallets WHERE id = ? AND user_id = ?");
-$stmt->bind_param("ii", $wallet_id, $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$wallet = $result->fetch_assoc();
-$stmt->close();
-
-if (!$wallet) {
-    die("Ví không tồn tại hoặc không thuộc về bạn.");
-}
-
-// Gán giá trị mặc định từ db hoặc POST và chuẩn hóa
-$name = $_POST['name'] ?? $wallet['name'];
-$type = $_POST['type'] ?? $wallet['type'];
-$balance = $_POST['balance'] ?? $wallet['balance'];
-$currency = strtoupper(trim($_POST['currency'] ?? $wallet['currency']));
-
 
 // 🔹 Xử lý form khi submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -48,19 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($currency === '') $errors[] = "Tiền tệ không được để trống.";
 
     if (empty($errors)) {
-        $stmt = $conn->prepare("
-            UPDATE Wallets 
-            SET name = ?, type = ?, balance = ?, currency = ?, edit_at = NOW() 
-            WHERE id = ? AND user_id = ?
-        ");
-        $stmt->bind_param("ssdiii", $name, $type, $balance, $currency, $wallet_id, $user_id);
+        $stmt = $conn->prepare("INSERT INTO Wallets (user_id, name, type, balance, currency, created_at, edit_at) 
+                                VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt->bind_param("issds", $user_id, $name, $type, $balance, $currency);
         $stmt->execute();
         $stmt->close();
 
+        // Sau khi thêm xong, đóng modal và reload parent
         echo "<script>
-            window.parent.closeEditWalletModal?.();
-            window.parent.location.reload();
-        </script>";
+                window.parent.closeAddWalletModal?.();
+                window.parent.location.reload();
+              </script>";
         exit;
     }
 }
@@ -69,23 +46,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Chỉnh sửa ví</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>Thêm Ví Mới</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
   <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
     <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
-      CHỈNH SỬA ví
+        Thêm Ví Mới
     </h1>
 
     <?php if (!empty($errors)): ?>
-        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <?php foreach ($errors as $error): ?>
-                <div>- <?= htmlspecialchars($error) ?></div>
-            <?php endforeach ?>
-        </div>
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        <?php foreach ($errors as $error): ?>
+            <div>- <?= htmlspecialchars($error) ?></div>
+        <?php endforeach ?>
+    </div>
     <?php endif; ?>
 
     <form method="POST" class="flex flex-col gap-4">
@@ -101,32 +77,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
 
         <select name="currency" class="border px-3 py-2 rounded" required>
-          <option value="">Chọn đơn vị tiền tệ</option>
-          <option value="VND" <?= $currency === 'VND' ? 'selected' : '' ?>>VND</option>
-          <option value="USD" <?= $currency === 'USD' ? 'selected' : '' ?>>USD</option>
-      </select>
-
+            <option value="">Chọn đơn vị tiền tệ</option>
+            <option value="VND" <?= $currency === 'VND' ? 'selected' : '' ?>>VND</option>
+            <option value="USD" <?= $currency === 'USD' ? 'selected' : '' ?>>USD</option>
+        </select>
 
         <input type="number" name="balance" placeholder="Số dư" class="border px-3 py-2 rounded"
                value="<?= htmlspecialchars($balance) ?>" step="1"
                oninput="checkBalance(this)" onkeypress="return event.key !== '-';">
 
         <div class="flex gap-4 justify-end">
-            <button type="button"
-                    onclick="window.parent.closeEditWalletModal()"
-                    class="px-4 py-2 rounded text-white font-semibold
-                           bg-gradient-to-r from-red-500 to-red-700
-                           hover:from-red-600 hover:to-red-800
-                           transition-colors duration-300">
+            <button type="button" onclick="window.parent.closeAddWalletModal()"
+                class="px-4 py-2 rounded text-white font-semibold bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-colors duration-300">
                 Huỷ
             </button>
 
             <button type="submit"
-                    class="px-4 py-2 rounded text-white font-semibold
-                           bg-gradient-to-r from-blue-500 to-blue-700
-                           hover:from-blue-600 hover:to-blue-800
-                           transition-colors duration-300">
-                Cập nhật
+                class="px-4 py-2 rounded text-white font-semibold bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-colors duration-300">
+                Lưu
             </button>
         </div>
     </form>

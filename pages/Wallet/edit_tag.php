@@ -119,7 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $stmt->close();
 
-    header('Location: Wallet.php');
+    echo "
+    <script>
+      window.parent.closeEditTagModal();
+      window.parent.location.reload();
+    </script>
+    ";
     exit;
   }
 }
@@ -134,9 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Chỉnh sửa Tag</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
+<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
   <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-xl font-semibold mb-6 text-center">CHỈNH SỬA TAG</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+      CHỈNH SỬA TAG
+    </h1>
      <?php if (!empty($errors)): ?>
       <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
         <?php foreach ($errors as $error): ?>
@@ -178,10 +185,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
 
-        <div class="flex justify-between">
-          <a href="Wallet.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Huỷ</a>
-          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Cập nhật</button>
+        <div class="flex gap-4 justify-end">
+          <button type="button"
+            onclick="window.parent.closeEditTagModal()"
+            class="px-4 py-2 rounded text-white font-semibold
+                  bg-gradient-to-r from-red-500 to-red-700
+                  hover:from-red-600 hover:to-red-800
+                  transition-colors duration-300">
+            Huỷ
+          </button>
+
+          <button type="submit"
+            class="px-4 py-2 rounded text-white font-semibold
+                  bg-gradient-to-r from-blue-500 to-blue-700
+                  hover:from-blue-600 hover:to-blue-800
+                  transition-colors duration-300">
+            Cập nhật
+          </button>
         </div>
+
       </form>
     
   </div>
