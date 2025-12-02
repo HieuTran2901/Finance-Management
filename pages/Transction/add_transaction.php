@@ -4,7 +4,10 @@ session_start();
 $errors = [];
 
 if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
+  echo "<script>
+    window.parent.closeAddTransactionModal?.();
+    window.parent.location.reload();
+  </script>";
   exit;
 }
 
@@ -114,7 +117,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        header('Location: Transaction.php');
+        echo "<script>
+          window.parent.closeAddTransactionModal?.();
+          window.parent.location.reload();
+        </script>";
         exit;
     }
 }
@@ -160,11 +166,12 @@ while ($row = $tags_result->fetch_assoc()) {
     });
   </script>
 <?php endif ?>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-  <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow w-full max-w-2xl space-y-4">
-    <h2 class="text-2xl font-bold text-center mb-4">Thêm Giao Dịch</h2>
-    
-          
+<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+      Thêm Giao Dịch
+    </h1>
+    <form method="POST" enctype="multipart/form-data" >
     <div>
       <label class="block font-medium mb-1">Tên </label>
       <input name="category" required class="w-full border p-2 rounded"
@@ -248,10 +255,24 @@ while ($row = $tags_result->fetch_assoc()) {
     </div>
 
 
-    <div class="flex justify-between" >
-        <a href="Transaction.php" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Huỷ</a>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lưu giao dịch</button>
-    </div>
+      <div class="flex gap-4 justify-end">
+        <button type="button" onclick="window.parent.closeAddTransactionModal()"
+          class="px-4 py-2 rounded text-white font-semibold
+                bg-gradient-to-r from-red-500 to-red-700
+                hover:from-red-600 hover:to-red-800
+                transition-colors duration-300">
+          Huỷ
+        </button>
+
+        <button type="submit"
+          class="px-4 py-2 rounded text-white font-semibold
+                bg-gradient-to-r from-blue-500 to-blue-700
+                hover:from-blue-600 hover:to-blue-800
+                transition-colors duration-300">
+          Lưu giao dịch
+        </button>
+      </div>
+
   </form>
 </body>
 </html>

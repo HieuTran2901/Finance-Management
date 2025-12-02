@@ -1,0 +1,172 @@
+body {
+    margin-left: 28px;
+}
+
+.custom-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 288px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #d0ddf1, #dbe3f4, #c6d3fb);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+    color: #f3f4f6;
+}
+
+/* Khối trên */
+.sidebar-top {
+    padding: 18px;
+    margin-top: -20px;
+}
+
+/* Logo */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -20px;
+}
+
+.sidebar-logo img {
+    width: 250px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* User */
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.sidebar-avatar {
+    width: 40px;
+    height: 40px;
+    background: #22c55e;
+    color: white;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.sidebar-user-info p:first-child {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.sidebar-user-info p:last-child {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Menu */
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+}
+
+.sidebar-menu a i {
+    color: #6366f1;
+    font-size: 16px;
+}
+
+.sidebar-menu a:hover {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.sidebar-menu a.active {
+    background: #c7d2fe;
+    color: #3730a3;
+    font-weight: bold;
+}
+
+/* Ông Noel */
+.sidebar-santa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+    margin-bottom: 3px;
+}
+
+.sidebar-santa img {
+    width: 250px;
+    height: auto;
+    animation: santa-bounce 2s infinite;
+}
+
+@keyframes santa-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-15px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(-7px);
+    }
+}
+
+
+/* Logout */
+.sidebar-logout {
+    display: flex;
+    justify-content: center;
+    /* căn giữa nội dung */
+    width: 100%;
+    /* chiếm toàn bộ chiều ngang */
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(to bottom, #085524, #561c1c);
+    /* từ đậm (#16a34a) xuống nhạt (#22c55e) */
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-logout:hover {
+    background: linear-gradient(to bottom, #2aef72, #fc3131);
+    /* đảo ngược gradient khi hover */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-logout i {
+    font-size: 16px;
+}

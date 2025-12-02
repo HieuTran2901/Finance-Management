@@ -32,7 +32,7 @@ if (!$wallet) {
 $name = $_POST['name'] ?? $wallet['name'];
 $type = $_POST['type'] ?? $wallet['type'];
 $balance = $_POST['balance'] ?? $wallet['balance'];
-$currency = strtoupper(trim($_POST['currency'] ?? $wallet['currency']));
+$currency = strtoupper(trim($wallet['currency']));
 
 
 // 🔹 Xử lý form khi submit
