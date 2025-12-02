@@ -28,7 +28,7 @@
   <title>Transaction</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../../css/fadein.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <!-- thông báo -->
@@ -79,7 +79,7 @@
 </aside>
 
 
-<div class="flex-1 p-6">
+<div class="flex-1 p-6 space-y-6">
     <?php
       // Lấy thông tin ví của người dùng
       if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_wallet'])) {
@@ -147,7 +147,7 @@
   <!-- Wallets Section -->
    <div class="bg-white rounded-xl shadow-lg p-6 mb-6"> <!-- Tăng đổ bóng và bo tròn góc -->
     <div class="flex justify-between items-center mb-6 border-b pb-4"> <!-- Thêm border-b và padding -->
-        <h2 class="text-2xl font-bold text-gray-800">Danh Sách Ví Của Bạn</h2> <!-- Tăng kích thước tiêu đề -->
+        <h2 class="text-2xl font-bold text-gray-800">Danh sách Ví Của Bạn</h2> <!-- Tăng kích thước tiêu đề -->
         <!-- Nếu bạn muốn thêm nút "Thêm Ví", có thể đặt ở đây, ví dụ: -->
         <!-- <a href="add_wallet.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
             <i class="fas fa-plus text-sm"></i> Thêm Ví Mới
@@ -215,21 +215,14 @@
                           <!-- Dải từ (Magnetic Stripe) -->
                           <div class="h-10 bg-black mt-5 w-full"></div>
 
-                            <div class="absolute right-0 top-[-10px] flex justify-end mt-auto pt-4 border-t border-gray-700">
-                              <a href="javascript:void(0)"
-                                onclick="openEditWalletModal(<?= $wallet['id'] ?>)"
-                                class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
-                                title="Chỉnh sửa">
-                                <i class="fas fa-edit"></i>
-                              </a>
-
-
-                              <a href="../Wallet/delete_wallet.php?id=<?= $wallet['id'] ?>"
-                                onclick="return confirm('Bạn có chắc muốn xoá ví này không? Toàn bộ giao dịch liên quan cũng sẽ bị xóa.')"
-                                class="inline-flex items-center px-3 py-1.5 text-red-400 text-sm font-semibold">
-                                  <i class="fas fa-trash-alt"></i>
-                              </a>
-                            </div>
+                            <div class="absolute right-0 top-[-10px] flex justify-end mt-auto pt-4 border-t border-gray-700"> <!-- Thêm border-t để phân tách -->
+                                  <a href="../Wallet/edit_wallet.php?id=<?= $wallet['id'] ?>" class="inline-flex items-center text-blue-300 text-sm font-semibold ">
+                                      <i class="fas fa-edit"></i>
+                                  </a>
+                                  <a href="../Wallet/delete_wallet.php?id=<?= $wallet['id'] ?>" onclick="return confirm('Bạn có chắc muốn xoá ví này không? Toàn bộ giao dịch liên quan cũng sẽ bị xóa.')" class="inline-flex items-center px-3 py-1.5 rounded-md text-red-400 text-sm font-semibold shadow-sm">
+                                      <i class="fas fa-trash-alt"></i>
+                                  </a>
+                              </div>
 
                           <!-- Khu vực Mã bảo mật (CVV) / Chữ ký -->
                           <div class="bg-gray-700 mx-6 mt-4 p-3 rounded-lg flex flex-col">
@@ -266,89 +259,13 @@
     <?php endif; ?>
 </div>
 
-<!----------------------------------- EDIT WALLET MODAL ---------------------------------->
-        <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div class="w-full max-w-xl animate-popup">
-            <iframe 
-              src=""
-              id="editWalletFrame"
-              class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-              loading="lazy">
-            </iframe>
-          </div>
-        </div>
 
-
-        <script>
-        function openEditWalletModal(id) {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "../Wallet/edit_wallet.php?id=" + id;
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-        }
-
-        function closeEditWalletModal() {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "";
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-        </script>
-        
   <!-- Transactions Section -->
-      <div class="bg-white rounded-md shadow p-6 mb-6">
-        <!-- Nút Thêm Ví -->
-        <div class="mb-6">
-            <!-- Tiêu đề căn giữa, chữ nổi bật -->
-            <h2 class="text-2xl font-bold text-center text-gray-900 drop-shadow-sm mb-3">
-                Giao dịch
-            </h2>
-
-            <!-- Nút thêm nằm bên phải -->
-            <div class="flex justify-end">
-                <button onclick="openAddTransactionModal()" 
-                    class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700
-                          text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
-                    Thêm Giao Dịch
-                </button>
-            </div>
-        </div>
-
-<!----------------------------------- ADD TRANSACTION MODAL ---------------------------------->
-    <div id="addTransactionModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div class="w-full max-w-3xl animate-popup">
-        <iframe 
-          src=""
-          id="addTransactionFrame"
-          class="w-full h-[100vh] border-none rounded-xl bg-transparent"
-          loading="lazy">
-        </iframe>
-      </div>
+  <div>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">💳 Giao dịch</h2>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="openTransactionForm()"><a href="add_transaction.php"> Thêm giao dịch</a></button>
     </div>
-    <script>
-    function openAddTransactionModal() {
-      const modal = document.getElementById("addTransactionModal");
-      const iframe = document.getElementById("addTransactionFrame");
-
-      iframe.src = "add_transaction.php";
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    }
-
-
-    function closeAddTransactionModal() {
-      const modal = document.getElementById("addTransactionModal");
-      const iframe = document.getElementById("addTransactionFrame");
-
-      iframe.src = "";
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
-    </script>
                 
     <!-- Bảng giao dịch -->
     <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
@@ -450,9 +367,11 @@
 </script>
 
 <!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
 
 <!-- Custom Scripts (Modal & Chart) -->
 <script src="../../js/Modal.js"></script>
+<script src="../../js/Chart.js"></script>
 <script>
   function openTransactionForm() {
     document.getElementById('transactionForm').classList.remove('hidden');

@@ -23,10 +23,12 @@ $errors = [];
 $name = '';
 $amount = '';
 $wallet_id = '';
+$icon = $_POST['icon'] ?? '🏷️'; // default icon
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = trim($_POST['name'] ?? '');
-  $amount = floatval($_POST['amount'] ?? 0);
+  $amount = 0;
+
   $wallet_id = intval($_POST['wallet_id'] ?? 0);
   $limit_amount = floatval($_POST['limit_amount'] ?? 0);
 
@@ -38,13 +40,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors[] = 'Vui lòng chọn ví.';
   }
 
-  if ($amount <= 0) {
-    $errors[] = 'Số tiền phải lớn hơn 0.';
-  }
 
   if ($limit_amount <= 0) {
     $errors[] = 'Giới hạn số tiền phải lớn hơn 0.';
   }
+  // Kiểm tra trùng tên tag
+    $stmt = $conn->prepare("SELECT id FROM Tags WHERE name = ? AND user_id = ?");
+    $stmt->bind_param("si", $name, $user_id);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+      $errors[] = 'Tên tag đã tồn tại. Vui lòng chọn tên khác.';
+    }
+    $stmt->close();
 
   if (empty($errors)) {
     // ✅ Kiểm tra số dư thực tế
@@ -61,11 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $current_balance = floatval($wallet['balance']);
 
       $stmt = $conn->prepare("
-        SELECT SUM(t.amount) AS total_tag_amount
-        FROM Transactions t
-        JOIN Transaction_Tags tt ON t.id = tt.transaction_id
-        WHERE t.wallet_id = ? AND t.user_id = ?
+        SELECT SUM(Tags.limit_amount) AS total_tag_amount
+        FROM Tags
+        JOIN Transaction_Tags ON Tags.id = Transaction_Tags.tag_id
+        JOIN Transactions ON Transactions.id = Transaction_Tags.transaction_id
+        WHERE Transactions.wallet_id = ? AND Tags.user_id = ?
       ");
+
       $stmt->bind_param("ii", $wallet_id, $user_id);
       $stmt->execute();
       $res = $stmt->get_result();
@@ -73,19 +84,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $total_tag_amount = floatval($data['total_tag_amount'] ?? 0);
       $stmt->close();
 
-      $new_total = $total_tag_amount + $amount;
+      $new_total = $total_tag_amount + $limit_amount;
+
 
       if ($new_total > $current_balance) {
-        $remaining = $current_balance - $total_tag_amount;
-        $errors[] = "Số dư ví không đủ. Bạn chỉ còn lại " . number_format($remaining, 0, ',', '.') . "₫ để tạo tag mới.";
+      $remaining = $current_balance - $total_tag_amount;
+      $errors[] = "Ví không đủ để tạo giới hạn tag. Bạn chỉ còn lại " . number_format($remaining, 0, ',', '.') . "₫ để tạo tag mới.";
       }
     }
   }
-
+    
   if (empty($errors)) {
     // 1. Thêm tag
-    $stmt = $conn->prepare("INSERT INTO Tags (name, user_id, created_at,limit_amount) VALUES (?, ?, NOW(), ?)");
-    $stmt->bind_param("sid", $name, $user_id,  $limit_amount);
+    $stmt = $conn->prepare("INSERT INTO Tags (name, user_id,icon, created_at,edit_at,limit_amount) VALUES (?, ?,?, NOW(), NOW(),?)");
+    $stmt->bind_param("sisd", $name, $user_id, $icon,  $limit_amount);
     $stmt->execute();
     $tag_id = $conn->insert_id;
     $stmt->close();
@@ -102,18 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ii", $transaction_id, $tag_id);
     $stmt->execute();
     $stmt->close();
-
-    echo "<script>
-    window.parent.closeAddTagModal();
-    window.parent.location.reload();
+  
+  echo "<script>
+      window.parent.closeAddTagModal();
+      window.parent.location.reload();
     </script>";
-    exit;
-
     exit;
   }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -147,12 +156,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <div class="mb-4">
-        <label for="amount" class="block font-medium mb-1">Tổng tiền giao dịch</label>
-        <input type="number" name="amount" id="amount" value="<?= htmlspecialchars($amount) ?>"
-               class="w-full border border-gray-300 rounded px-3 py-2" step="500" required
-               oninvalid="this.setCustomValidity('Vui lòng nhập số tiền hợp lệ.')"
-               oninput="checkAmount(this)">
-      </div>
+          <label for="icon" class="block font-medium mb-1">Chọn Icon</label>
+          <div class="grid grid-cols-6 gap-2">
+            <?php
+              $icons = ['🏷️', '💸', '🍔', '🎁', '🚗', '🎓', '🏡', '📱', '💻', '📚', '💳','🥦','🍎','🥤','⚡','💧'];
+              $selected_icon = $_POST['icon'] ?? ''; // hoặc giá trị mặc định
+              foreach ($icons as $opt_icon):
+            ?>
+              <label class="cursor-pointer">
+                <input type="radio" name="icon" value="<?= $opt_icon ?>" class="hidden peer" <?= $selected_icon === $opt_icon ? 'checked' : '' ?>>
+                <span class="inline-block text-2xl border rounded-md p-2 w-full text-center peer-checked:bg-blue-200 hover:bg-gray-100">
+                  <?= $opt_icon ?>
+                </span>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
 
       <div class="mb-4">
         <label for="limit_amount" class="block font-medium mb-1">Giới hạn số tiền của tag</label>
