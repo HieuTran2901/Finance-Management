@@ -265,38 +265,10 @@
     <?php endif; ?>
 </div>
 
-  <!----------------------------------- EDIT WALLET MODAL ---------------------------------->
-                            <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                              <div class="w-full max-w-xl animate-popup">
-                                <iframe 
-                                  src=""
-                                  id="editWalletFrame"
-                                  class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-                                  loading="lazy">
-                                </iframe>
-                              </div>
-                            </div>
+<?php
+include "../Wallet/modals/edit_wallet_modal.php";
+?>
 
-
-                            <script>
-                            function openEditWalletModal(id) {
-                              const modal = document.getElementById("editWalletModal");
-                              const iframe = document.getElementById("editWalletFrame");
-
-                              iframe.src = "../Wallet/edit_wallet.php?id=" + id;
-                              modal.classList.remove("hidden");
-                              modal.classList.add("flex");
-                            }
-
-                            function closeEditWalletModal() {
-                              const modal = document.getElementById("editWalletModal");
-                              const iframe = document.getElementById("editWalletFrame");
-
-                              iframe.src = "";
-                              modal.classList.add("hidden");
-                              modal.classList.remove("flex");
-                            }
-                            </script>
   <!-- Transactions Section -->
   <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
         <div class="flex flex-col mb-6 border-b pb-4">
@@ -368,13 +340,24 @@
                   <td class="px-4 py-2 border text-center"><?= date('d/m/Y', strtotime($transaction['date'])) ?></td>
                   <td class="px-4 py-2 border text-center"><?= date('d/m/Y', strtotime($wallet['edit_at']))  ?></td>
                   <td class="px-4 py-2 border text-center">
-                    <a href="edit_transaction.php?id=<?= $transaction['id'] ?>" class="text-blue-600 hover:underline">
-                      <i class="fas fa-edit "></i>
-                    </a>
-                    <a href="delete_transaction.php?id=<?= $transaction['id'] ?>" class="text-red-600 hover:underline ml-2" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                    <!-- NÚT SỬA -->
+                    <button 
+                      onclick="openEditTransactionModal(<?= $transaction['id'] ?>)"
+                      class="text-blue-600 hover:underline"
+                    >
+                      <i class="fas fa-edit"></i>
+                    </button>
+
+                    <!-- NÚT XOÁ -->
+                    <a 
+                      href="delete_transaction.php?id=<?= $transaction['id'] ?>" 
+                      class="text-red-600 hover:underline ml-2" 
+                      onclick="return confirm('Bạn có chắc muốn xóa?')"
+                    >
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>
+
                 </tr>
               <?php endforeach; ?>
             <?php endif; ?>
@@ -384,29 +367,10 @@
     </table>
   </div>
 
-  <!--------------- ADD TRANSACTION MODAL ----------------->
-<div id="addTransactionModal" 
-     class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-
-    <iframe src="add_transaction.php"
-        class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
-        loading="lazy">
-    </iframe>
-
-</div>
-<script>
-function openAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
-
-function closeAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
-</script>
+ <?php
+    include "modals/add_transaction_modal.php";
+    include "modals/edit_transaction_modal.php";
+  ?>
 
 <!-- AOS Animation Library -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

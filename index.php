@@ -104,6 +104,7 @@
 
 </head>
 <!-- Modal -->
+ 
 <div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
   <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center relative animate-fade-in">
     <h2 class="text-2xl font-semibold text-indigo-700 mb-3">Thông báo</h2>
@@ -111,19 +112,20 @@
     <button id="closeModal" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">Đóng</button>
   </div>
 </div>
-<body class="bg-gray-100 font-sans">
-  <div class="flex min-h-screen pl-64">
- <!-- Sidebar -->
+
+<body class="bg-gray-100 font-sans ">
+    <div class="flex min-h-screen pl-64 dashboard-scale-content">
+
+    <!-- Sidebar -->
     <?php
-      $currentPage = $_SERVER['PHP_SELF'];
-      renderSidebar($users, $currentPage , '../pages','../../index.php','../logout.php');
+      $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
+      renderSidebar($users, $currentPage, "../../pages","../../index.php","../../dangkydangnhap/logout.php");
     ?>
     <!-- Danh sách menu -->
      <?php
       $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
       renderSidebar($users, $currentPage,"./pages","./index.php","./pages/logout.php");
       ?>
-</aside>
 
 
     <!-- Chatbox -->
@@ -197,7 +199,7 @@
 </div>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6">
+        <main class="flex-1 p-6">
       <!-- Greeting Section -->
 <div class="flex items-center justify-between bg-gradient-to-r from-indigo-50 via-white to-purple-50 p-6 rounded-xl shadow mb-6">
   <div class="flex items-center gap-4">

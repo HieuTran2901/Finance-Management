@@ -131,21 +131,21 @@
 
       <div class="bg-white rounded-md shadow p-6 mb-6">
         <!-- Nút Thêm Ví -->
-<div class="mb-6">
-    <!-- Tiêu đề căn giữa, chữ nổi bật -->
-    <h2 class="text-2xl font-bold text-center text-gray-900 drop-shadow-sm mb-3">
-        DANH SÁCH VÍ
-    </h2>
+        <div class="mb-6">
+            <!-- Tiêu đề căn giữa, chữ nổi bật -->
+            <h2 class="text-2xl font-bold text-center text-gray-900 drop-shadow-sm mb-3">
+                DANH SÁCH VÍ
+            </h2>
 
-    <!-- Nút thêm nằm bên phải -->
-    <div class="flex justify-end">
-        <button onclick="openAddWalletModal()" 
-            class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700
-                   text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
-             Thêm Ví
-        </button>
-    </div>
-</div>
+            <!-- Nút thêm nằm bên phải -->
+            <div class="flex justify-end">
+                <button onclick="openAddWalletModal()" 
+                    class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700
+                          text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
+                    Thêm Ví
+                </button>
+            </div>
+        </div>
 
 
 
@@ -280,119 +280,13 @@
             </div>
         </div>
 
+<?php
+include "modals/add_wallet_modal.php";
+include "modals/edit_wallet_modal.php";
+include "modals/add_tag_modal.php";
+include "modals/edit_tag_modal.php";
+?>
 
-    <!--MODAL -->
-
-    <!----------------------------------- ADD WALLET MODAL ---------------------------------->
-        <div id="addWalletModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-            <iframe src="add_wallet.php" 
-            class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
-            loading="lazy"></iframe>
-        </div>
-        <script>
-          function openAddWalletModal() {
-            const modal = document.getElementById("addWalletModal");
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
-        }
-
-        function closeAddWalletModal() {
-            const modal = document.getElementById("addWalletModal");
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-        }
-
-        </script>
-
-<!----------------------------------- EDIT WALLET MODAL ---------------------------------->
-        <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div class="w-full max-w-xl animate-popup">
-            <iframe 
-              src=""
-              id="editWalletFrame"
-              class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-              loading="lazy">
-            </iframe>
-          </div>
-        </div>
-
-
-        <script>
-        function openEditWalletModal(id) {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "../Wallet/edit_wallet.php?id=" + id;
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-        }
-
-        function closeEditWalletModal() {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "";
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-        </script>
-
-    <!----------------------------------- ADD TAG MODAL ---------------------------------->
-    <div id="addTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-      <div class="w-full max-w-xl animate-popup">
-
-        <!-- IFRAME CHỈ CÒN FORM, KHÔNG VIỀN, KHÔNG HEADER -->
-        <iframe 
-          src="add_tag.php"
-          class="w-full h-[90vh] border-none rounded-xl bg-transparent"
-          loading="lazy">
-        </iframe>
-
-      </div>
-    </div>
-
-    <script>
-      function openAddTagModal() {
-        document.getElementById("addTagModal").classList.remove("hidden");
-        document.getElementById("addTagModal").classList.add("flex");
-      }
-
-      function closeAddTagModal() {
-        document.getElementById("addTagModal").classList.add("hidden");
-        document.getElementById("addTagModal").classList.remove("flex");
-      }
-    </script>
-
-    <!----------------------------------- EDIT TAG MODAL ---------------------------------->
-    <div id="editTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-      <div class="w-full max-w-xl animate-popup">
-        <iframe 
-          src=""
-          id="editTagFrame"
-          class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
-    <script>
-      function openEditTagModal(id) {
-        const modal = document.getElementById("editTagModal");
-        const iframe = document.getElementById("editTagFrame");
-
-        iframe.src = "edit_tag.php?id=" + id;
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      }
-
-      function closeEditTagModal() {
-        const modal = document.getElementById("editTagModal");
-        const iframe = document.getElementById("editTagFrame");
-
-        iframe.src = "";
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }
-    </script>
      
     <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"> <!-- Bọc bảng trong container có bo tròn và đổ bóng -->
         <table class="min-w-full table-auto divide-y divide-gray-200"> <!-- Bỏ border của table, dùng divide-y -->
