@@ -345,12 +345,11 @@ include "modals/edit_tag_modal.php";
 
                     <td class="px-4 py-3 text-center text-sm">
                         <a href="javascript:void(0)"
-                          onclick="openEditTagModal(<?= $row['tag_id'] ?>)"
-                          class="bg-gradient-to-r from-indigo-500 to-indigo-700 
-                          hover:from-indigo-600 hover:to-indigo-800 
-                          text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
-                          <i class="fas fa-edit"></i>
-                        </a>
+                                    onclick="openEditTagModal(<?= $row['tag_id'] ?>)"
+                                    class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
+                                    title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i>
+                                  </a>
 
                         <a href="delete_tag.php?id=<?= $row['tag_id'] ?>" onclick="return confirm('Bạn có chắc muốn xoá thẻ này không?')" class="text-red-600 hover:text-red-800 font-medium mx-1.5 p-1 rounded-md hover:bg-red-50 transition-colors duration-150" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
