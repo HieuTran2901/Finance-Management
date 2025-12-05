@@ -28,7 +28,7 @@ $stmt->close();
 //  Lấy thông tin tag và transaction liên quan
 if ($tag_id > 0) {
   $stmt = $conn->prepare("
-    SELECT T.name, TR.amount, TR.wallet_id, TR.id AS transaction_id
+    SELECT T.name, T.icon, TR.amount, TR.wallet_id, TR.id AS transaction_id
     FROM Tags T
     JOIN Transaction_Tags TT ON TT.tag_id = T.id
     JOIN Transactions TR ON TR.id = TT.transaction_id
@@ -38,11 +38,12 @@ if ($tag_id > 0) {
   $stmt->execute();
   $result = $stmt->get_result();
   if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
-    $name = $row['name'];
-    $amount = $row['amount'];
-    $wallet_id = $row['wallet_id'];
-    $transaction_id = $row['transaction_id'];
+  $row = $result->fetch_assoc();
+  $name = $row['name'];
+  $amount = $row['amount'];
+  $wallet_id = $row['wallet_id'];
+  $transaction_id = $row['transaction_id'];
+  $icon = $row['icon'] ?? ''; // <-- gán icon (nếu DB có cột icon)
   } else {
     $errors[] = "Không tìm thấy tag hoặc giao dịch liên quan.";
   }
@@ -138,75 +139,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <title>Chỉnh sửa Tag</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/khung.css">
 </head>
 <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
-      CHỈNH SỬA TAG
-    </h1>
-     <?php if (!empty($errors)): ?>
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        <?php foreach ($errors as $error): ?>
-          <div>- <?= htmlspecialchars($error) ?></div>
-        <?php endforeach ?>
-      </div>
-    <?php endif ?>
+      <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
+  <!-- Ảnh -->
+        <img src="../../css/img/khung1.png" alt="khung" class="w-full h-64 object-cover">
    
-      <form method="POST">
-        <div class="mb-4">
-          <label for="name" class="block font-medium mb-1">Tên Tag</label>
-          <input type="text" name="name" id="name" value="<?= htmlspecialchars($name) ?>"
-                 class="w-full border border-gray-300 rounded px-3 py-2" required
-                 oninvalid="this.setCustomValidity('Vui lòng nhập tên tag.')"
-                 oninput="this.setCustomValidity('')" >
-              
-        </div>
-         <div class="mb-4">
-        <label for="amount" class="block font-medium mb-1">Tổng tiền giao dịch</label>
-        <input type="number" name="amount" id="amount" value="<?= htmlspecialchars($amount) ?>"
-               class="w-full border border-gray-300 rounded px-3 py-2" step="500" required
-              oninvalid="this.setCustomValidity('Vui lòng nhập số tiền hợp lệ.')"
-              oninput="checkAmount(this)">
-        </div>
+<form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">
 
+  <h1 class="text-2xl font-bold mb-4 text-center">CHỈNH SỬA TAG</h1>
 
-        <div class="mb-6">
-        <label for="wallet_id" class="block font-medium mb-1">Chọn ví</label>
-        <select name="wallet_id" id="wallet_id" class="w-full border border-gray-300 rounded px-3 py-2" required
-                oninvalid="this.setCustomValidity('Vui lòng chọn ví.')"
-                oninput="this.setCustomValidity('')">
-          <option value="">-- Chọn ví --</option>
-          <?php foreach ($wallets as $wallet): ?>
-            <option value="<?= $wallet['id'] ?>" <?= $wallet_id == $wallet['id'] ? 'selected' : '' ?>>
-              <?= htmlspecialchars($wallet['name']) ?>
-            </option>
-          <?php endforeach ?>
-        </select>
-      </div>
-
-
-        <div class="flex gap-4 justify-end">
-          <button type="button"
-            onclick="window.parent.closeEditTagModal()"
-            class="px-4 py-2 rounded text-white font-semibold
-                  bg-gradient-to-r from-red-500 to-red-700
-                  hover:from-red-600 hover:to-red-800
-                  transition-colors duration-300">
-            Huỷ
-          </button>
-
-          <button type="submit"
-            class="px-4 py-2 rounded text-white font-semibold
-                  bg-gradient-to-r from-blue-500 to-blue-700
-                  hover:from-blue-600 hover:to-blue-800
-                  transition-colors duration-300">
-            Cập nhật
-          </button>
-        </div>
-
-      </form>
-    
+  <!-- TÊN TAG -->
+  <div class="flex flex-col gap-1 mb-3 w-full">
+    <label class="font-medium text-gray-700">Tên Tag</label>
+    <input type="text" name="name" value="<?= htmlspecialchars($name) ?>"
+      class="w-full border border-gray-300 rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition"
+      required>
   </div>
+
+  <!-- CHỌN ICON -->
+  <div class="flex flex-col gap-1 mb-3 w-full">
+    <label class="font-medium text-gray-700">Chọn Icon</label>
+
+    <div class="grid grid-cols-6 gap-2 mb-4">
+
+      <?php
+        $icons = ['🏷️','💸','🍔','🎁','🚗','🎓','🏡','📱','💻','📚','💳','🥦','🍎','🥤','⚡','💧'];
+        foreach ($icons as $opt_icon):
+      ?>
+      <label class="cursor-pointer">
+        <input type="radio" name="icon" value="<?= $opt_icon ?>" 
+               class="hidden peer"
+               <?= ($icon == $opt_icon ? 'checked' : '') ?>>
+
+        <span class="inline-block text-2xl border rounded-md p-2 w-full text-center
+                     peer-checked:bg-white peer-checked:border-blue-500
+                     hover:bg-gray-100 transition">
+          <?= $opt_icon ?>
+        </span>
+      </label>
+      <?php endforeach; ?>
+
+    </div>
+  </div>
+
+  <!-- TỔNG TIỀN -->
+  <div class="flex flex-col gap-1 mb-3 w-full">
+    <label class="font-medium text-gray-700">Tổng tiền giao dịch</label>
+    <input type="number" name="amount" id="amount" value="<?= htmlspecialchars($amount) ?>"
+      class="w-full border border-gray-300 rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition"
+      step="500" required oninput="checkAmount(this)">
+  </div>
+
+  <!-- CHỌN VÍ -->
+  <div class="flex flex-col gap-1 mb-3 w-full">
+    <label class="font-medium text-gray-700">Chọn ví</label>
+    <select name="wallet_id"
+      class="w-full border border-gray-300 rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition"
+      required>
+      <option value="">-- Chọn ví --</option>
+      <?php foreach ($wallets as $wallet): ?>
+        <option value="<?= $wallet['id'] ?>" <?= $wallet_id == $wallet['id'] ? 'selected' : '' ?>>
+          <?= htmlspecialchars($wallet['name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- HIỂN THỊ LỖI -->
+  <?php if (!empty($errors)): ?>
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+      <?php foreach ($errors as $error): ?>
+        <div>- <?= htmlspecialchars($error) ?></div>
+      <?php endforeach ?>
+    </div>
+  <?php endif ?>
+
+  <!-- NÚT -->
+  <div class="flex gap-4 justify-end pt-4">
+    <button type="button" onclick="window.parent.closeEditTagModal()"
+      class="px-4 py-2 rounded text-white font-semibold
+             bg-gradient-to-r from-red-500 to-red-700
+             hover:from-red-600 hover:to-red-800 transition">
+      Huỷ
+    </button>
+
+    <button type="submit"
+      class="px-4 py-2 rounded text-white font-semibold
+             bg-gradient-to-r from-blue-500 to-blue-700
+             hover:from-blue-600 hover:to-blue-800 transition">
+      Cập nhật
+    </button>
+  </div>
+
+</form>
+
+    
             <script>
                 function checkAmount(input) {
                   if (parseFloat(input.value) < 0) {
@@ -220,21 +249,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </html>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
   const walletSelect = document.getElementById("wallet_id");
   const amountInput = document.getElementById("amount");
 
+  if (!walletSelect || !amountInput) return; // tránh lỗi nếu không tìm thấy
+
   function updateStep() {
     const selectedOption = walletSelect.options[walletSelect.selectedIndex];
+    if (!selectedOption) return;
+
     const walletName = selectedOption.text.toLowerCase();
     const specialNames = ["visa", "ngân hàng"];
 
-    if (specialNames.some(keyword => walletName.includes(keyword))) {
-      amountInput.step = "1";
-    } else {
-      amountInput.step = "500";
-    }
+    amountInput.step = specialNames.some(keyword => walletName.includes(keyword))
+      ? "1"
+      : "500";
   }
 
   walletSelect.addEventListener("change", updateStep);
-  updateStep(); // Gọi ngay khi load trang
+  updateStep();
+});
 </script>
+

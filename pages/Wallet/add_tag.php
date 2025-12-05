@@ -130,123 +130,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <title>Thêm Tag</title>
   <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../css/khung.css">
 </head>
 
-<style>
-/* Container ảnh nền */
-.image-form-container {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;    
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-  background-color: #cce7fb;  
-  padding-top: 1rem;    /* giảm padding trên */
-  padding-bottom: 1rem; /* giảm padding dưới */
-}
-.image-form-container img {
-  width: 100%;
-  height: 750px;       /* tăng chiều cao ảnh */
-  object-fit: cover;   
-}
-
-.image-form-container form {
-  position: absolute;
-  top: 62.5%;             /* kéo form hơi lên trên */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-}
-form {
-  padding: 2rem;                  /* khoảng cách bên trong */          /* bo góc */
-  width: 90%;
-  max-width: 400px;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .form {
-    width: 95%;
-    padding: 1.5rem;
-  }
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-</style>
 
     <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
       <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
   <!-- Ảnh -->
-  <img src="../../css/img/day.png" alt="dayhoa" class="w-full h-64 object-cover">
+        <img src="../../css/img/khung1.png" alt="khung" class="w-full h-64 object-cover">
 
-  <!-- Form nổi -->
-  <form method="POST" class="absolute inset-0 flex flex-col justify-center items-center">
-    <h1 class="text-2xl font-bold mb-4 text-center">THÊM TAG MỚI</h1>
+        <!-- Form nổi -->
+        <form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">
+          <h1 class="text-2xl font-bold mb-4 text-center">THÊM TAG MỚI</h1>
+          <div class="flex flex-col gap-1 mb-3 w-full">
+            <label class="font-medium text-gray-700">Tên Tag</label>
+            <input type="text" name="name" placeholder="Tên Tag" required
+              class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
+          </div>
+          <?php if (!empty($errors)): ?>
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+              <?php foreach ($errors as $error): ?>
+                <div>- <?= htmlspecialchars($error) ?></div>
+              <?php endforeach ?>
+            </div>
+          <?php endif ?>
+          <div class="flex flex-col gap-1 mb-3 w-full">
+          <label class="font-medium text-gray-700">Chọn Icon</label>
+            <div class="grid grid-cols-6 gap-2 mb-4">
+              <?php
+                $icons = ['🏷️','💸','🍔','🎁','🚗','🎓','🏡','📱','💻','📚','💳','🥦','🍎','🥤','⚡','💧'];
+                foreach ($icons as $opt_icon):
+              ?>
+              <label class="cursor-pointer">
+                <input type="radio" name="icon" value="<?= $opt_icon ?>" class="hidden peer">
+                <span class="inline-block text-2xl border rounded-md p-2 w-full text-center
+                            peer-checked:bg-blue-200 peer-checked:border-blue-600 peer-checked:shadow-lg
+                            hover:bg-gray-100 transition">
+                  <?= $opt_icon ?>
+                </span>
+              </label>
+              <?php endforeach; ?>
+            </div>
 
-    <input type="text" name="name" placeholder="Tên Tag" required
-       class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
+          </div>
 
-    <?php if (!empty($errors)): ?>
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        <?php foreach ($errors as $error): ?>
-          <div>- <?= htmlspecialchars($error) ?></div>
-        <?php endforeach ?>
+
+
+          <input type="number" name="limit_amount" placeholder="Giới hạn số tiền" required
+                  class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
+
+          <select name="wallet_id" id="wallet_id" required  
+              class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
+            <option value="">-- Chọn ví --</option>
+            <?php foreach ($wallets as $wallet): ?>
+              <option value="<?= $wallet['id'] ?>"><?= htmlspecialchars($wallet['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+
+          <div class="flex gap-4 justify-end pt-4">
+                  <button type="button" onclick="window.parent.closeAddTagModal()"
+                  class="px-4 py-2 rounded text-white font-semibold
+                          bg-gradient-to-r from-red-500 to-red-700
+                          hover:from-red-600 hover:to-red-800 transition">
+                  Huỷ
+                  </button>
+
+                  <button type="submit"
+                  class="px-4 py-2 rounded text-white font-semibold
+                          bg-gradient-to-r from-blue-500 to-blue-700
+                          hover:from-blue-600 hover:to-blue-800 transition">
+                  Lưu
+                  </button>
+              </div>
+        </form>
       </div>
-    <?php endif ?>
-    <label class="block mb-2">Chọn Icon</label>
-      <div class="grid grid-cols-6 gap-2 mb-4">
-        <?php
-          $icons = ['🏷️', '💸', '🍔', '🎁', '🚗', '🎓', '🏡', '📱', '💻', '📚', '💳','🥦','🍎','🥤','⚡','💧'];
-          foreach ($icons as $opt_icon):
-        ?>
-        <label class="cursor-pointer">
-          <input type="radio" name="icon" value="<?= $opt_icon ?>" class="hidden peer">
-          <span class="inline-block text-2xl border rounded-md p-2 w-full text-center
-                      peer-checked:bg-white hover:bg-gray-100 transition-colors">
-            <?= $opt_icon ?>
-          </span>
-        </label>
-        <?php endforeach; ?>
-      </div>
 
 
-
-    <input type="number" name="limit_amount" placeholder="Giới hạn số tiền" required
-            class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
-
-    <select name="wallet_id" required  class="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-blue-100 focus:bg-white focus:border-blue-500 transition-colors">
-      <option value="">-- Chọn ví --</option>
-      <?php foreach ($wallets as $wallet): ?>
-        <option value="<?= $wallet['id'] ?>"><?= htmlspecialchars($wallet['name']) ?></option>
-      <?php endforeach; ?>
-    </select>
-
-    <div class="flex gap-4 justify-end pt-4">
-            <button type="button" onclick="window.parent.closeAddTagModal()"
-            class="px-4 py-2 rounded text-white font-semibold
-                    bg-gradient-to-r from-red-500 to-red-700
-                    hover:from-red-600 hover:to-red-800 transition">
-            Huỷ
-            </button>
-
-            <button type="submit"
-            class="px-4 py-2 rounded text-white font-semibold
-                    bg-gradient-to-r from-blue-500 to-blue-700
-                    hover:from-blue-600 hover:to-blue-800 transition">
-            Lưu
-            </button>
-        </div>
-  </form>
-</div>
-
-
-</body>
+    </body>
 </html>
 
 

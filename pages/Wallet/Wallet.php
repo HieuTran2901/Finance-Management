@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="../../css/index.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../../css/fadein.css">
+  <link rel="stylesheet" href="../../css/chudep.css">
 </head>
 <!-- thông báo -->
 <div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
@@ -133,9 +134,13 @@
         <!-- Nút Thêm Ví -->
         <div class="mb-6">
             <!-- Tiêu đề căn giữa, chữ nổi bật -->
-            <h2 class="text-2xl font-bold text-center text-gray-900 drop-shadow-sm mb-3">
-                DANH SÁCH VÍ
-            </h2>
+        <h2 class="snow-text "
+            data-text="DANH SÁCH VÍ">
+            DANH SÁCH VÍ
+        </h2>
+
+
+
 
             <!-- Nút thêm nằm bên phải -->
             <div class="flex justify-end">
@@ -265,8 +270,9 @@
       <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
         <div class="flex flex-col mb-6 border-b pb-4">
             <!-- Tiêu đề ở giữa -->
-            <h2 class="text-3xl font-bold text-gray-900 drop-shadow-sm text-center mb-4">
-                DANH SÁCH THẺ (Tags)
+            <h2 class="snow-text "
+            data-text="DANH SÁCH THẺ">
+                DANH SÁCH THẺ 
             </h2>
 
             <!-- Nút thêm nằm bên phải dưới tiêu đề -->
@@ -340,8 +346,9 @@ include "modals/edit_tag_modal.php";
                     <td class="px-4 py-3 text-center text-sm">
                         <a href="javascript:void(0)"
                           onclick="openEditTagModal(<?= $row['tag_id'] ?>)"
-                          class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
-                          title="Chỉnh sửa">
+                          class="bg-gradient-to-r from-indigo-500 to-indigo-700 
+                          hover:from-indigo-600 hover:to-indigo-800 
+                          text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
                           <i class="fas fa-edit"></i>
                         </a>
 

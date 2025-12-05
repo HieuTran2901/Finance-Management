@@ -49,12 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>Thêm Ví Mới</title>
 <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/khung.css">
 </head>
-<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
-        Thêm Ví Mới
-    </h1>
+    <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
+      <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
+  <!-- Ảnh -->
+        <img src="../../css/img/khung1.png" alt="khung" class="w-full h-64 object-cover">
+    
 
     <?php if (!empty($errors)): ?>
     <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
@@ -64,74 +65,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <?php endif; ?>
 
-    <form method="POST" class="flex flex-col gap-5">
+<form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">
+    
+    <h1 class="text-2xl font-bold mb-4 text-center">Thêm Ví Mới</h1>
 
-        <!-- TÊN VÍ -->
-        <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Tên ví</label>
-            <input type="text" name="name"
+    <!-- TÊN VÍ -->
+    <div class="flex flex-col gap-1 mb-3 w-full">
+        <label class="font-medium text-gray-700">Tên ví</label>
+        <input type="text" name="name"
             value="<?= htmlspecialchars($name) ?>"
             placeholder="Nhập tên ví"
-            class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            class="border border-gray-400 px-3 py-2 rounded-lg bg-white shadow-sm 
+                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition w-full"
             required
             oninvalid="this.setCustomValidity('Vui lòng nhập tên ví.')"
             oninput="this.setCustomValidity('')">
-        </div>
+    </div>
 
-        <!-- LOẠI VÍ -->
-        <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Loại ví</label>
-            <select name="type"
-            class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+    <!-- LOẠI VÍ -->
+    <div class="flex flex-col gap-1 mb-3 w-full">
+        <label class="font-medium text-gray-700">Loại ví</label>
+        <select name="type"
+            class="border border-gray-400 px-3 py-2 rounded-lg bg-white shadow-sm 
+                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition w-full"
             required>
             <option value="">Chọn loại ví</option>
             <option value="Cá nhân" <?= $type === 'Cá nhân' ? 'selected' : '' ?>>Cá nhân</option>
             <option value="Doanh nghiệp" <?= $type === 'Doanh nghiệp' ? 'selected' : '' ?>>Doanh nghiệp</option>
-            </select>
-        </div>
+        </select>
+    </div>
 
-        <!-- ĐƠN VỊ TIỀN TỆ -->
-        <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Đơn vị tiền tệ</label>
-            <select name="currency"
-            class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+    <!-- ĐƠN VỊ TIỀN TỆ -->
+    <div class="flex flex-col gap-1 mb-3 w-full">
+        <label class="font-medium text-gray-700">Đơn vị tiền tệ</label>
+        <select name="currency"
+            class="border border-gray-400 px-3 py-2 rounded-lg bg-white shadow-sm 
+                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition w-full"
             required>
             <option value="">Chọn đơn vị tiền tệ</option>
             <option value="VND" <?= $currency === 'VND' ? 'selected' : '' ?>>VND</option>
             <option value="USD" <?= $currency === 'USD' ? 'selected' : '' ?>>USD</option>
-            </select>
-        </div>
+        </select>
+    </div>
 
-        <!-- SỐ DƯ -->
-        <div class="flex flex-col gap-1">
-            <label class="font-medium text-gray-700">Số dư</label>
-            <input type="number" name="balance"
+    <!-- SỐ DƯ -->
+    <div class="flex flex-col gap-1 mb-3 w-full">
+        <label class="font-medium text-gray-700">Số dư</label>
+        <input type="number" name="balance"
             value="<?= htmlspecialchars($balance) ?>"
             placeholder="Nhập số dư"
-            class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            class="border border-gray-400 px-3 py-2 rounded-lg bg-white shadow-sm 
+                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition w-full"
             step="1"
             oninput="checkBalance(this)"
-            onkeypress="return event.key !== '-';">
-        </div>
+            onkeypress="return event.key !== '-'">
+    </div>
 
-        <!-- NÚT -->
-        <div class="flex gap-4 justify-end pt-4">
-            <button type="button" onclick="window.parent.closeAddWalletModal()"
-            class="px-4 py-2 rounded text-white font-semibold
-                    bg-gradient-to-r from-red-500 to-red-700
-                    hover:from-red-600 hover:to-red-800 transition">
+    <!-- NÚT -->
+    <div class="flex gap-4 pt-4">
+        <button type="button" onclick="window.parent.closeAddWalletModal()"
+            class="px-4 py-2 rounded-lg text-white font-semibold
+                   bg-gradient-to-r from-red-500 to-red-700
+                   hover:from-red-600 hover:to-red-800 transition">
             Huỷ
-            </button>
+        </button>
 
-            <button type="submit"
-            class="px-4 py-2 rounded text-white font-semibold
-                    bg-gradient-to-r from-blue-500 to-blue-700
-                    hover:from-blue-600 hover:to-blue-800 transition">
+        <button type="submit"
+            class="px-4 py-2 rounded-lg text-white font-semibold
+                   bg-gradient-to-r from-blue-500 to-blue-700
+                   hover:from-blue-600 hover:to-blue-800 transition">
             Lưu
-            </button>
-        </div>
+        </button>
+    </div>
 
-        </form>
+</form>
+
 
 </div>
 

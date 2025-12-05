@@ -1,0 +1,48 @@
+.image-form-container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: #cce7fb;
+}
+
+.image-form-container img {
+    width: 100%;
+    height: 750px;
+    /* tăng chiều cao ảnh */
+    object-fit: fill;
+}
+
+.image-form-container form {
+    position: absolute;
+    top: 46.5%;
+    /* kéo form hơi lên trên */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+}
+
+form {
+    padding: 2rem;
+    /* khoảng cách bên trong */
+    /* bo góc */
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .form {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

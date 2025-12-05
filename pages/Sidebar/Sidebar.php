@@ -69,7 +69,7 @@ function renderSidebar($users, $currentPage, $baseUrl, $indexUrl, $logoutUrl) {
             </div>
 
             <!-- Nút Đăng xuất cố định cuối sidebar -->
-            <div class="sidebar-bottom mt-auto p-4">
+            <div class="sidebar-bottom mt-auto p-1">
                 <a href="<?= $logoutUrl ?>" class="sidebar-logout flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
                 </a>

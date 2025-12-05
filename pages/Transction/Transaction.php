@@ -27,6 +27,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Transaction</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="../../css/chudep.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -148,7 +149,9 @@
   <!-- Wallets Section -->
    <div class="bg-white rounded-xl shadow-lg p-6 mb-6"> <!-- Tăng đổ bóng và bo tròn góc -->
     <div class="flex justify-between items-center mb-6 border-b pb-4"> <!-- Thêm border-b và padding -->
-        <h2 class="text-2xl font-bold text-gray-800">Danh sách Ví Của Bạn</h2> <!-- Tăng kích thước tiêu đề -->
+        <h2 class="snow-text "
+            data-text="DANH SÁCH VÍ">
+            DANH SÁCH VÍ</h2> <!-- Tăng kích thước tiêu đề -->
         <!-- Nếu bạn muốn thêm nút "Thêm Ví", có thể đặt ở đây, ví dụ: -->
         <!-- <a href="add_wallet.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
             <i class="fas fa-plus text-sm"></i> Thêm Ví Mới
@@ -272,7 +275,8 @@ include "../Wallet/modals/edit_wallet_modal.php";
   <!-- Transactions Section -->
   <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
         <div class="flex flex-col mb-6 border-b pb-4">
-          <h2 class="text-3xl font-bold text-gray-900 drop-shadow-sm text-center mb-4"> Giao dịch</h2>
+          <h2 class="snow-text "
+            data-text="GIAO DỊCH"> GIAO DỊCH</h2>
         
          <div class="flex justify-end">
             <button onclick="openAddTransactionModal()" 
