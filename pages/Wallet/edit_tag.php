@@ -28,12 +28,13 @@ $stmt->close();
 //  Lấy thông tin tag và transaction liên quan
 if ($tag_id > 0) {
   $stmt = $conn->prepare("
-    SELECT T.name, T.icon, TR.amount, TR.wallet_id, TR.id AS transaction_id
-    FROM Tags T
-    JOIN Transaction_Tags TT ON TT.tag_id = T.id
-    JOIN Transactions TR ON TR.id = TT.transaction_id
-    WHERE T.id = ? AND T.user_id = ?
-  ");
+  SELECT T.name, T.icon, TR.amount, TR.wallet_id, TR.id AS transaction_id
+  FROM Tags T
+  JOIN Transaction_Tags TT ON TT.tag_id = T.id
+  JOIN Transactions TR ON TR.id = TT.transaction_id
+  WHERE T.id = ? AND T.user_id = ?
+");
+
   $stmt->bind_param("ii", $tag_id, $user_id);
   $stmt->execute();
   $result = $stmt->get_result();
