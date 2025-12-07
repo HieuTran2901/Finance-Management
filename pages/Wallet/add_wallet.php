@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
       <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
   <!-- Ảnh -->
-        <img src="../../css/img/khung1.png" alt="khung" class="w-full h-64 object-cover">
+        <img src="../../css/img/khung.png" alt="khung" class="w-full h-64 object-cover">
     
 
     <?php if (!empty($errors)): ?>

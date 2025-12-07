@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
       <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
   <!-- Ảnh -->
-        <img src="../../css/img/khung1.png" alt="khung" class="w-full h-64 object-cover">
+        <img src="../../css/img/khung.png" alt="khung" class="w-full h-64 object-cover">
 
         <!-- Form nổi -->
         <form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">

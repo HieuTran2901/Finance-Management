@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden">
 
   <!-- ẢNH NỀN -->
-  <img src="../../css/img/khung1.png" class="w-full h-64 object-cover">
+  <img src="../../css/img/khung.png" class="w-full h-64 object-cover">
 
   <!-- FORM EDIT -->
   <form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">

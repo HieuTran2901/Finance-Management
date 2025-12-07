@@ -141,6 +141,7 @@ while ($row = $tags_result->fetch_assoc()) {
   <meta charset="UTF-8">
   <title>Thêm Giao Dịch</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../css/khung.css">
 </head>
 <?php if (!empty($errors)): ?>
   <div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -167,79 +168,83 @@ while ($row = $tags_result->fetch_assoc()) {
   </script>
 <?php endif ?>
 <body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+  <div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
+<!-- Ảnh -->
+    <img src="../../css/img/khung.png" alt="khung" class="w-full h-64 object-cover">
+
+ <form method="POST" enctype="multipart/form-data" 
+      class="absolute inset-0 flex flex-col justify-center items-center px-16 py-4">
+
+   <h1 class="text-2xl font-bold mb-4 text-center">
       Thêm Giao Dịch
-    </h1>
-    <form method="POST" enctype="multipart/form-data" >
-    <div>
-      <label class="block font-medium mb-1">Tên </label>
-      <input name="category" required class="w-full border p-2 rounded"
-      value="<?= htmlspecialchars($_POST['category'] ?? '') ?>"
-      oninvalid="this.setCustomValidity('Vui lòng nhập tên.')"
-      oninput="this.setCustomValidity('')">
+   </h1>
 
-    </div>
-
-    <div>
-      <label class="block font-medium mb-1">Chọn ví</label>
-      <select name="wallet_id" id="wallet_id" required class="w-full border p-2 rounded"
-        oninvalid="this.setCustomValidity('Vui lòng chọn ví.')"
-        oninput="this.setCustomValidity('')">
-        <option value="">-- Chọn ví --</option> 
-        <?php while ($wallet = $wallets_result->fetch_assoc()): ?>
-          <option value="<?= $wallet['id'] ?>" 
-            <?= (isset($_POST['wallet_id']) && $_POST['wallet_id'] == $wallet['id']) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($wallet['name']) ?>
-          </option>
-        <?php endwhile; ?>
-      </select>
-    
-
-    <div class="flex gap-4">
+  <!-- HÀNG 1: TÊN + CHỌN VÍ -->
+  <div class="flex gap-4 w-full mb-4 mt-3">
       <div class="flex-1">
-        <label class="block font-medium mb-1">Loại giao dịch</label>
-       <select name="type" id="type" class="w-full border p-2 rounded">
-        <option value="expense" <?= (($_POST['type'] ?? '') === 'expense') ? 'selected' : '' ?>>Chi</option>
-        <option value="income" <?= (($_POST['type'] ?? '') === 'income') ? 'selected' : '' ?>>Thu</option>
-      </select>
+          <label class="block font-medium mb-1">Tên</label>
+          <input name="category" required class="w-full border p-2 rounded"
+            value="<?= htmlspecialchars($_POST['category'] ?? '') ?>"
+            oninvalid="this.setCustomValidity('Vui lòng nhập tên.')"
+            oninput="this.setCustomValidity('')">
       </div>
+
       <div class="flex-1">
-        <label class="block font-medium mb-1">Số tiền</label >
-        <input type="number" name="amount" step="0.01" required class="w-full border p-2 rounded"
-        value="<?= htmlspecialchars($_POST['amount'] ?? '') ?>"
-        oninvalid="this.setCustomValidity('Vui lòng nhập số tiền phù hợp.')"
-        oninput="checkAmount(this)">
-
+          <label class="block font-medium mb-1">Chọn ví</label>
+          <select name="wallet_id" id="wallet_id" required
+            class="w-full border p-2 rounded"
+            oninvalid="this.setCustomValidity('Vui lòng chọn ví.')"
+            oninput="this.setCustomValidity('')">
+              <option value="">-- Chọn ví --</option>
+              <?php while ($wallet = $wallets_result->fetch_assoc()): ?>
+                  <option value="<?= $wallet['id'] ?>"
+                    <?= (isset($_POST['wallet_id']) && $_POST['wallet_id'] == $wallet['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($wallet['name']) ?>
+                  </option>
+              <?php endwhile; ?>
+          </select>
       </div>
-    </div>
+  </div>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Ngày giao dịch</label >
-      <input type="datetime-local" name="date" required class="w-full border p-2 rounded"
+  <!-- HÀNG 2: LOẠI GIAO DỊCH + SỐ TIỀN -->
+  <div class="flex gap-4 w-full mb-4">
+      <div class="flex-1">
+          <label class="block font-medium mb-1">Loại giao dịch</label>
+          <select name="type" id="type" class="w-full border p-2 rounded">
+            <option value="expense" <?= (($_POST['type'] ?? '') === 'expense') ? 'selected' : '' ?>>Chi</option>
+            <option value="income" <?= (($_POST['type'] ?? '') === 'income') ? 'selected' : '' ?>>Thu</option>
+          </select>
+      </div>
+
+      <div class="flex-1">
+          <label class="block font-medium mb-1">Số tiền</label>
+          <input type="number" name="amount" step="0.01" required
+            class="w-full border p-2 rounded"
+            value="<?= htmlspecialchars($_POST['amount'] ?? '') ?>"
+            oninvalid="this.setCustomValidity('Vui lòng nhập số tiền phù hợp.')"
+            oninput="checkAmount(this)">
+      </div>
+  </div>
+
+  <!-- NGÀY -->
+  <div class="w-full mb-4">
+      <label class="block font-medium mb-1">Ngày giao dịch</label>
+      <input type="datetime-local" name="date" required
+        class="w-full border p-2 rounded"
         value="<?= htmlspecialchars($_POST['date'] ?? '') ?>"
         oninvalid="this.setCustomValidity('Vui lòng chọn ngày.')"
         oninput="this.setCustomValidity('')">
+  </div>
 
-    </div>
-
-    <div class="mb-4">
+  <!-- GHI CHÚ -->
+  <div class="w-full mb-4">
+      <label class="block font-medium mb-1">Ghi chú</label>
       <input type="text" name="note" class="w-full border p-2 rounded"
-      value="<?= htmlspecialchars($_POST['note'] ?? '') ?>">
+        value="<?= htmlspecialchars($_POST['note'] ?? '') ?>">
+  </div>
 
-    </div>
-
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Ảnh hóa đơn</label>
-      <input type="file" name="photo_receipt" class="w-full border p-2 rounded">
-    </div>
-
-    <!-- <div>
-      <label class="block font-medium mb-1">Cảm xúc</label>
-      <input type="range" min="1" max="5" name="emotion_level" class="w-full">
-    </div> -->
-
-    <div class="mb-6" id="tags-section">
+  <!-- TAGS -->
+  <div class="w-full mb-4" id="tags-section">
       <label class="block font-medium mb-1">Tags</label>
       <input type="text" name="tags" id="tags" class="w-full border p-2 rounded" list="tags-list"
         value="<?= htmlspecialchars($_POST['tags'] ?? '') ?>"
@@ -252,28 +257,37 @@ while ($row = $tags_result->fetch_assoc()) {
           <option value="<?= htmlspecialchars($tag) ?>">
         <?php endforeach; ?>
       </datalist>
-    </div>
+  </div>
+
+  <!-- ẢNH -->
+  <div class="w-full mb-4">
+      <label class="block font-medium mb-1">Ảnh hóa đơn</label>
+      <input type="file" name="photo_receipt" class="w-full border p-2 rounded">
+  </div>
+
+  <!-- NÚT -->
+  <div class="flex gap-4 justify-end w-full">
+      <button type="button" onclick="window.parent.closeAddTransactionModal()"
+        class="px-4 py-2 rounded text-white font-semibold
+              bg-gradient-to-r from-red-500 to-red-700
+              hover:from-red-600 hover:to-red-800
+              transition-colors duration-300">
+        Huỷ
+      </button>
+
+      <button type="submit"
+        class="px-4 py-2 rounded text-white font-semibold
+              bg-gradient-to-r from-blue-500 to-blue-700
+              hover:from-blue-600 hover:to-blue-800
+              transition-colors duration-300">
+        Lưu giao dịch
+      </button>
+  </div>
+
+</form>
 
 
-      <div class="flex gap-4 justify-end">
-        <button type="button" onclick="window.parent.closeAddTransactionModal()"
-          class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-red-500 to-red-700
-                hover:from-red-600 hover:to-red-800
-                transition-colors duration-300">
-          Huỷ
-        </button>
-
-        <button type="submit"
-          class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-blue-500 to-blue-700
-                hover:from-blue-600 hover:to-blue-800
-                transition-colors duration-300">
-          Lưu giao dịch
-        </button>
-      </div>
-
-  </form>
+</div>
 </body>
 </html>
 
@@ -347,27 +361,4 @@ document.addEventListener("DOMContentLoaded", function () {
   toggleTagsRequired(); // Gọi lần đầu để set theo mặc định
 });
 
-</script>
- <!--------------- ADD TRANSACTION MODAL ----------------->
-<div id="addTransactionModal" 
-     class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-
-    <iframe src="add_transaction.php"
-        class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
-        loading="lazy">
-    </iframe>
-
-</div>
-<script>
-function openAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
-
-function closeAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
 </script>
