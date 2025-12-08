@@ -24,16 +24,12 @@ $result = $stmt->get_result();
 $wallet = $result->fetch_assoc();
 $stmt->close();
 
-if (!$wallet) {
-    die("Ví không tồn tại hoặc không thuộc về bạn.");
-}
+if (!$wallet) die("Ví không tồn tại hoặc không thuộc về bạn.");
 
-// Gán giá trị mặc định từ db hoặc POST và chuẩn hóa
 $name = $_POST['name'] ?? $wallet['name'];
 $type = $_POST['type'] ?? $wallet['type'];
 $balance = $_POST['balance'] ?? $wallet['balance'];
 $currency = strtoupper(trim($wallet['currency']));
-
 
 // 🔹 Xử lý form khi submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,110 +61,106 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Chỉnh sửa ví</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../css/khung.css">
 </head>
 
-<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
-      CHỈNH SỬA ví
-    </h1>
+<body class="font-sans min-h-screen flex items-center justify-center">
 
-    <?php if (!empty($errors)): ?>
-        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <?php foreach ($errors as $error): ?>
-                <div>- <?= htmlspecialchars($error) ?></div>
-            <?php endforeach ?>
+<div class="image-form-container relative w-full max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden">
+
+    <!-- ẢNH NỀN -->
+    <img src="../../css/img/khung.png" class="w-full h-64 object-cover">
+
+    <!-- FORM -->
+    <form method="POST" class="absolute inset-0 flex flex-col justify-center items-center px-6 py-4">
+
+      <h1 class="text-2xl font-bold mb-4">CHỈNH SỬA VÍ</h1>
+
+      <!-- HIỂN THỊ LỖI -->
+      <?php if (!empty($errors)): ?>
+        <div class="bg-red-100 text-red-700 p-3 rounded w-full mb-4">
+          <?php foreach ($errors as $error): ?>
+            <div>- <?= htmlspecialchars($error) ?></div>
+          <?php endforeach; ?>
         </div>
-    <?php endif; ?>
+      <?php endif; ?>
 
-    <form method="POST" class="flex flex-col gap-5">
-
-    <!-- TÊN VÍ -->
-    <div class="flex flex-col gap-1">
+      <!-- TÊN VÍ -->
+      <div class="w-full mb-3">
         <label class="font-medium text-gray-700">Tên ví</label>
         <input type="text" name="name"
-        value="<?= htmlspecialchars($name) ?>"
-        placeholder="Nhập tên ví"
-        class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
-        required
-        oninvalid="this.setCustomValidity('Vui lòng nhập tên ví.')"
-        oninput="this.setCustomValidity('')">
-    </div>
+               value="<?= htmlspecialchars($name) ?>"
+               class="w-full border rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition"
+               required>
+      </div>
 
-    <!-- LOẠI VÍ -->
-    <div class="flex flex-col gap-1">
+      <!-- LOẠI VÍ -->
+      <div class="w-full mb-3">
         <label class="font-medium text-gray-700">Loại ví</label>
         <select name="type"
-        class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
-        required>
-        <option value="">Chọn loại ví</option>
-        <option value="Cá nhân" <?= $type === 'Cá nhân' ? 'selected' : '' ?>>Cá nhân</option>
-        <option value="Doanh nghiệp" <?= $type === 'Doanh nghiệp' ? 'selected' : '' ?>>Doanh nghiệp</option>
+                class="w-full border rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition">
+          <option value="">Chọn loại ví</option>
+          <option value="Cá nhân" <?= $type === 'Cá nhân' ? 'selected' : '' ?>>Cá nhân</option>
+          <option value="Doanh nghiệp" <?= $type === 'Doanh nghiệp' ? 'selected' : '' ?>>Doanh nghiệp</option>
         </select>
-    </div>
+      </div>
 
-    <!-- ĐƠN VỊ TIỀN TỆ -->
-    <div class="flex flex-col gap-1">
+      <!-- ĐƠN VỊ TIỀN TỆ -->
+      <div class="w-full mb-3">
         <label class="font-medium text-gray-700">Đơn vị tiền tệ</label>
         <select name="currency"
-        class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
-        required>
-        <option value="">Chọn đơn vị tiền tệ</option>
-        <option value="VND" <?= $currency === 'VND' ? 'selected' : '' ?>>VND</option>
-        <option value="USD" <?= $currency === 'USD' ? 'selected' : '' ?>>USD</option>
+                class="w-full border rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition">
+          <option value="">Chọn đơn vị tiền tệ</option>
+          <option value="VND" <?= $currency === 'VND' ? 'selected' : '' ?>>VND</option>
+          <option value="USD" <?= $currency === 'USD' ? 'selected' : '' ?>>USD</option>
         </select>
-    </div>
+      </div>
 
-    <!-- SỐ DƯ -->
-    <div class="flex flex-col gap-1">
+      <!-- SỐ DƯ -->
+      <div class="w-full mb-3">
         <label class="font-medium text-gray-700">Số dư</label>
         <input type="number" name="balance"
-        value="<?= htmlspecialchars($balance) ?>"
-        placeholder="Nhập số dư"
-        class="border px-3 py-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
-        step="1"
-        oninput="checkBalance(this)"
-        onkeypress="return event.key !== '-';">
-    </div>
+               value="<?= htmlspecialchars($balance) ?>"
+               class="w-full border rounded px-3 py-2 bg-blue-100 focus:bg-white focus:border-blue-500 transition"
+               step="1"
+               oninput="checkBalance(this)">
+      </div>
 
-    <!-- NÚT -->
-    <div class="flex gap-4 justify-end pt-4">
+      <!-- BUTTONS -->
+      <div class="flex gap-4 justify-end w-full mt-2">
+
         <button type="button"
-        onclick="window.parent.closeEditWalletModal()"
-        class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-red-500 to-red-700
-                hover:from-red-600 hover:to-red-800 transition">
-        Huỷ
+            onclick="window.parent.closeEditWalletModal()"
+            class="px-4 py-2 rounded text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800">
+            Huỷ
         </button>
 
         <button type="submit"
-        class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-blue-500 to-blue-700
-                hover:from-blue-600 hover:to-blue-800 transition">
-        Cập nhật
+            class="px-4 py-2 rounded text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800">
+            Cập nhật
         </button>
-    </div>
+
+      </div>
 
     </form>
-
 </div>
 
 <script>
 function checkBalance(input) {
-    const value = input.value;
-    if (value.includes('-') || parseFloat(value) < 0) {
-        input.setCustomValidity("Không được nhập số âm hoặc dấu '-'");
-    } else {
-        input.setCustomValidity("");
-    }
+  const value = input.value;
+  if (value.includes('-') || parseFloat(value) < 0) {
+      input.setCustomValidity("Không được nhập số âm hoặc dấu '-'");
+  } else {
+      input.setCustomValidity("");
+  }
 }
 </script>
+
 </body>
 </html>

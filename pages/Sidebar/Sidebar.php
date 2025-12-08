@@ -56,11 +56,20 @@ function renderSidebar($users, $currentPage, $baseUrl, $indexUrl, $logoutUrl) {
             </nav>
         </div>
         <!-- Logout -->
-        <div class="sidebar-bottom">
-            <a href="'.$logoutUrl.'" class="sidebar-logout">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-            </a>
+        <div class="flex flex-col h-full">
+            <!-- Nội dung sidebar ở đây -->
+            <div class="flex-1">
+                <!-- Menu chính, các link, logo,... -->
+            </div>
+
+            <!-- Nút Đăng xuất cố định cuối sidebar -->
+            <div class="sidebar-bottom mt-auto p-1">
+                <a href="<?= $logoutUrl ?>" class="sidebar-logout flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+                </a>
+            </div>
         </div>
+
 
     </aside>';
 }
