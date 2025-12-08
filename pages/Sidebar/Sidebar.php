@@ -55,12 +55,6 @@ function renderSidebar($users, $currentPage, $baseUrl, $indexUrl, $logoutUrl) {
     echo '
             </nav>
         </div>
-
-        <!-- Ông Noel -->
-        <div class="sidebar-santa">
-            <img src="'.$baseUrl.'../../css/img/ongnoel.png" alt="Santa">
-        </div>
-
         <!-- Logout -->
         <div class="sidebar-bottom">
             <a href="'.$logoutUrl.'" class="sidebar-logout">
