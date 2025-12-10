@@ -268,11 +268,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       <div class="flex justify-end gap-3 mt-4">
         <button type="button" onclick="window.parent.closeEditTransactionModal()"
-         class="bg-red-600 text-white px-4 py-2 rounded">Huỷ</button>
-
+          class="px-4 py-2 rounded text-white font-semibold
+                bg-gradient-to-r from-red-500 to-red-700
+                hover:from-red-600 hover:to-red-800
+                transition-colors duration-300">
+          Huỷ
+        </button>
         <button type="submit"
-         class="bg-blue-600 text-white px-4 py-2 rounded">Cập nhật</button>
-      </div>
+          class="px-4 py-2 rounded text-white font-semibold
+                bg-gradient-to-r from-blue-500 to-blue-700
+                hover:from-blue-600 hover:to-blue-800
+                transition-colors duration-300">
+          Cập nhật
+        </button>
 
     </form>
   </div>
