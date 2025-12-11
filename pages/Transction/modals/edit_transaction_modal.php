@@ -1,32 +1,35 @@
-<!-- MODAL EDIT -->
-<div id="editTransactionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-lg overflow-hidden w-[500px] h-[680px] relative">
-    <iframe id="editTransactionFrame" src="" class="w-full h-full border-none"></iframe>
+<!--------------- EDIT TRANSACTION MODAL ----------------->
+<div id="editTransactionModal" 
+     class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
 
-    <button 
-      onclick="closeEditTransactionModal()" 
-      class="absolute top-2 right-2 text-red-600 font-bold text-lg"
-    >
-      ✖
-    </button>
-  </div>
+    <iframe id="editTransactionFrame"
+        src=""
+        class="w-full h-[90vh] border-none rounded-xl bg-transparent"
+        loading="lazy">
+    </iframe>
+
 </div>
+
 <script>
 function openEditTransactionModal(id) {
-  const modal = document.getElementById("editTransactionModal");
-  const frame = document.getElementById("editTransactionFrame");
+    const modal = document.getElementById("editTransactionModal");
+    const frame = document.getElementById("editTransactionFrame");
 
-  frame.src = "edit_transaction.php?id=" + id;
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
+    // Gắn link edit khi mở
+    frame.src = "edit_transaction.php?id=" + id;
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
 }
 
 function closeEditTransactionModal() {
-  const modal = document.getElementById("editTransactionModal");
-  const frame = document.getElementById("editTransactionFrame");
+    const modal = document.getElementById("editTransactionModal");
+    const frame = document.getElementById("editTransactionFrame");
 
-  frame.src = "";
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
+    // Reset iframe tránh lưu lại dữ liệu cũ
+    frame.src = "";
+
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
 }
 </script>

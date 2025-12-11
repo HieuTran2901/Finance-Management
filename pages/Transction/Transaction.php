@@ -148,7 +148,7 @@
   <!-- Wallets Section -->
    <div class="bg-white rounded-xl shadow-lg p-6 mb-6"> <!-- Tăng đổ bóng và bo tròn góc -->
     <div class="flex justify-between items-center mb-6 border-b pb-4"> <!-- Thêm border-b và padding -->
-        <h2 class="text-2xl font-bold text-gray-800">Danh sách Ví Của Bạn</h2> <!-- Tăng kích thước tiêu đề -->
+        <h2 class="text-2xl font-bold text-gray-800">DANH SÁCH VÍ CỦA BẠN</h2> <!-- Tăng kích thước tiêu đề -->
         <!-- Nếu bạn muốn thêm nút "Thêm Ví", có thể đặt ở đây, ví dụ: -->
         <!-- <a href="add_wallet.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-semibold shadow-md transition-all duration-200">
             <i class="fas fa-plus text-sm"></i> Thêm Ví Mới
@@ -300,7 +300,7 @@
   <!-- Transactions Section -->
   <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
         <div class="flex flex-col mb-6 border-b pb-4">
-          <h2 class="text-3xl font-bold text-gray-900 drop-shadow-sm text-center mb-4"> Giao dịch</h2>
+          <h2 class="text-3xl font-bold text-gray-900 drop-shadow-sm text-center mb-4"> GIAO DỊCH</h2>
         
          <div class="flex justify-end">
             <button onclick="openAddTransactionModal()" 
@@ -368,9 +368,13 @@
                   <td class="px-4 py-2 border text-center"><?= date('d/m/Y', strtotime($transaction['date'])) ?></td>
                   <td class="px-4 py-2 border text-center"><?= date('d/m/Y', strtotime($wallet['edit_at']))  ?></td>
                   <td class="px-4 py-2 border text-center">
-                    <a href="edit_transaction.php?id=<?= $transaction['id'] ?>" class="text-blue-600 hover:underline">
-                      <i class="fas fa-edit "></i>
+                   <a href="javascript:void(0)"
+                      onclick="openEditTransactionModal(<?= $transaction['id'] ?>)"
+                      class="text-blue-600 hover:text-blue-800 font-medium mx-1.5 p-1 rounded-md hover:bg-blue-50 transition-colors duration-150"
+                      title="Chỉnh sửa">
+                      <i class="fas fa-edit"></i>
                     </a>
+
                     <a href="delete_transaction.php?id=<?= $transaction['id'] ?>" class="text-red-600 hover:underline ml-2" onclick="return confirm('Bạn có chắc muốn xóa?')">
                       <i class="fas fa-trash-alt"></i>
                     </a>
@@ -384,30 +388,11 @@
     </table>
   </div>
 
-  <!--------------- ADD TRANSACTION MODAL ----------------->
-<div id="addTransactionModal" 
-     class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-
-    <iframe src="add_transaction.php"
-        class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
-        loading="lazy">
-    </iframe>
-
-</div>
-<script>
-function openAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-}
-
-function closeAddTransactionModal() {
-  const modal = document.getElementById("addTransactionModal");
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
-</script>
-
+<?php
+include "../Wallet/modals/edit_wallet_modal.php";
+include "modals/add_transaction_modal.php";
+include "modals/edit_transaction_modal.php";
+?>
 <!-- AOS Animation Library -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 

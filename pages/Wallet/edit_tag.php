@@ -15,6 +15,7 @@ $name = '';
 $amount = '';
 $wallet_id = '';
 $errors = [];
+$icon = '';
 
 //  Lấy danh sách ví của user đang đăng nhập
 $wallets = [];
@@ -28,11 +29,11 @@ $stmt->close();
 //  Lấy thông tin tag và transaction liên quan
 if ($tag_id > 0) {
   $stmt = $conn->prepare("
-    SELECT T.name, TR.amount, TR.wallet_id, TR.id AS transaction_id
-    FROM Tags T
-    JOIN Transaction_Tags TT ON TT.tag_id = T.id
-    JOIN Transactions TR ON TR.id = TT.transaction_id
-    WHERE T.id = ? AND T.user_id = ?
+      SELECT T.name, T.icon, TR.amount, TR.wallet_id, TR.id AS transaction_id
+      FROM Tags T
+      JOIN Transaction_Tags TT ON TT.tag_id = T.id
+      JOIN Transactions TR ON TR.id = TT.transaction_id
+      WHERE T.id = ? AND T.user_id = ?
   ");
   $stmt->bind_param("ii", $tag_id, $user_id);
   $stmt->execute();
@@ -40,6 +41,7 @@ if ($tag_id > 0) {
   if ($result->num_rows === 1) {
     $row = $result->fetch_assoc();
     $name = $row['name'];
+    $icon = $row['icon']; 
     $amount = $row['amount'];
     $wallet_id = $row['wallet_id'];
     $transaction_id = $row['transaction_id'];
@@ -54,6 +56,7 @@ if ($tag_id > 0) {
 //  Xử lý khi submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = trim($_POST['name'] ?? '');
+  $icon = $_POST['icon'] ?? '';
   $amount = floatval($_POST['amount'] ?? 0);
   $wallet_id = intval($_POST['wallet_id'] ?? 0);
 
@@ -108,8 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (empty($errors)) {
     //  Cập nhật Tag
-    $stmt = $conn->prepare("UPDATE Tags SET name = ?, edit_at = NOW() WHERE id = ? AND user_id = ?");
-    $stmt->bind_param("sii", $name, $tag_id, $user_id);
+    $stmt = $conn->prepare("UPDATE Tags SET name = ?, icon = ?, edit_at = NOW() WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ssii", $name, $icon, $tag_id, $user_id);
+
     $stmt->execute();
     $stmt->close();
 
@@ -161,6 +165,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  oninput="this.setCustomValidity('')" >
               
         </div>
+        
+        <div class="flex flex-col gap-1 mb-3 w-full">
+          <label class="font-medium text-gray-700">Chọn Icon</label>
+
+          <div class="grid grid-cols-6 gap-2 mb-4">
+            <?php
+              $icons = ['🏷️','💸','🍔','🎁','🚗','🎓','🏡','📱','💻','📚','💳','🥦','🍎','🥤','⚡','💧'];
+              foreach ($icons as $opt_icon):
+            ?>
+            <label class="cursor-pointer">
+              <input type="radio" name="icon" value="<?= $opt_icon ?>" 
+                    class="hidden peer"
+                    <?= ($icon == $opt_icon ? 'checked' : '') ?>>
+
+              <span class="inline-block text-2xl border rounded-md p-2 w-full text-center
+                          transition-all
+                          peer-checked:bg-blue-500 peer-checked:text-white 
+                          peer-checked:border-blue-600 peer-checked:shadow-lg
+                          hover:bg-gray-100">
+                <?= $opt_icon ?>
+              </span>
+            </label>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+
+        
          <div class="mb-4">
         <label for="amount" class="block font-medium mb-1">Tổng tiền giao dịch</label>
         <input type="number" name="amount" id="amount" value="<?= htmlspecialchars($amount) ?>"
