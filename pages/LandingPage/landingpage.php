@@ -266,6 +266,13 @@
             if (e.target === modal) modal.classList.add("hidden");
         });
     </script>
+    <script>
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+            window.location.reload();
+            }
+        });
+    </script>
 
 </body>
 </html>

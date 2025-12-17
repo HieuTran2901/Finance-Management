@@ -1,12 +1,12 @@
 body {
-    margin-left: 28px;
+    margin-left: 0px;
 }
 
 .custom-sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 288px;
+    width: 245px;
     height: 100vh;
     background: linear-gradient(to bottom, #d0ddf1, #dbe3f4, #c6d3fb);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
@@ -103,20 +103,7 @@ body {
     font-weight: bold;
 }
 
-/* Ông Noel */
-.sidebar-santa {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px 0;
-    margin-bottom: 3px;
-}
 
-.sidebar-santa img {
-    width: 250px;
-    height: auto;
-    animation: santa-bounce 2s infinite;
-}
 
 @keyframes santa-bounce {
 

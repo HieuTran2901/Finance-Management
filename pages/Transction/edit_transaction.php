@@ -204,7 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="font-sans min-h-screen flex items-center justify-center">
   <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
 
-    <h1 class="text-2xl font-bold mb-6 text-center">Chỉnh sửa Giao Dịch</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">CHỈNH SỬA GIAO DỊCH</h1>
 
     <?php if (!empty($errors)): ?>
       <div class="bg-red-100 text-red-700 p-3 rounded mb-4">

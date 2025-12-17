@@ -2,13 +2,21 @@ body {
   margin: 0;
   height: 100vh;
   width: 100%;
-  background: linear-gradient(#0093d8, #ffffff);
+  background-image: url("../css/img/bgr.png");
+  background-size: 100% 100%;
   overflow: hidden;
   font-family: Arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+@media (min-width: 1024px) {
+  body {
+    background-attachment: fixed;
+    /* ảnh đứng yên */
+  }
 }
 
 /* Tuyết rơi toàn màn hình */
@@ -31,7 +39,7 @@ body {
   }
 
   50% {
-    background-position: 300px 500px, -150px 300px, 150px 400px;
+    background-position: 300px 500px, -150px 300px, 150px 500px;
   }
 
   100% {
@@ -42,7 +50,7 @@ body {
 /* Nền đất phủ tuyết */
 .bottom_snow {
   position: absolute;
-  bottom: 0;
+  bottom: -50px;
   /* luôn nằm dưới cùng */
   left: 50%;
   transform: translateX(-50%);
@@ -50,7 +58,7 @@ body {
   height: 150px;
   /* độ cao lớp tuyết */
   background: linear-gradient(to top, #ffffff 0%, #e2e2e2 100%);
-  border-radius: 50% 50% 0 0;
+  border-radius: 40% 20% 0 0;
   z-index: 1;
   /* dưới cây và quà */
   box-shadow: 0 -10px 30px rgba(255, 255, 255, 0.3) inset;
@@ -60,7 +68,7 @@ body {
 /* Thêm hiệu ứng gợn tuyết */
 .bottom_snow {
   position: absolute;
-  bottom: -20px;
+  bottom: -70px;
   /* lùi xuống một chút để phủ lên gốc cây */
   left: 50%;
   transform: translateX(-50%);
@@ -68,7 +76,7 @@ body {
   height: 200px;
   /* cao hơn để phủ gốc cây và quà */
   background: #ffffff;
-  border-radius: 50% 50% 0 0;
+  border-radius: 20% 10% 0 0;
   z-index: 2;
   /* nằm trên nền nhưng dưới cây/quà */
   box-shadow: 0 -10px 30px rgba(255, 255, 255, 0.3) inset;
@@ -83,7 +91,7 @@ body {
   width: 700px;
   height: 230px;
   background: #fff;
-  border-radius: 50%;
+  border-radius: 90%;
 }
 
 .bottom_snow::before {
@@ -97,15 +105,15 @@ body {
 /* Người tuyết bên trái */
 .snowman {
   position: absolute;
-  left: 120px;
-  bottom: 170px;
+  left: 90px;
+  bottom: 50px;
   width: 120px;
   /* Chiều rộng ảnh */
   z-index: 2;
 }
 
 .snowman img {
-  width: 300px;
+  width: 285px;
   /* Ảnh sẽ tự co theo div */
   height: auto;
   display: block;
@@ -114,9 +122,8 @@ body {
 /* Cây thông bên phải */
 .tree-container {
   position: absolute;
-  right: 200px;
-  bottom: 80px;
-  width: 300px;
+  right: 70px;
+  bottom: 60px;
   /* chiều rộng của ảnh */
   height: auto;
   /* tự co chiều cao */
@@ -124,7 +131,7 @@ body {
 }
 
 .tree-container img.tree-img {
-  width: 400px;
+  width: 350px;
   /* co theo div */
   height: auto;
   display: block;
@@ -133,24 +140,26 @@ body {
 /* Div ngoài cùng: khung chứa ảnh */
 .image-container {
   position: relative;
-  bottom: 40px;
-  width: 1100px;
-  /* giới hạn chiều rộng ảnh */
-  height: 900px;
+  bottom: 20px;
+  width: 825px;
+  /* 1100 × 0.75 */
+  height: 675px;
+  /* 900 × 0.75 */
   /* giới hạn chiều cao ảnh */
   background-image: url("../css/img/nhanonl.png");
   /* ảnh nền */
   background-size: cover;
   background-position: center;
+  z-index: 3;
   /* form không ra ngoài div */
 }
 
 /* Form nằm trên ảnh */
 .form {
   position: absolute;
-  top: 520px;
+  top: 420px;
   left: 48.5%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.85);
   width: 20%;
   padding: 2em;
   color: #ffffff;
@@ -161,7 +170,7 @@ body {
 
 /* Style tiêu đề */
 #heading {
-  font-size: 1.7em;
+  font-size: 1.4em;
   margin-bottom: 1em;
   text-align: center;
   font-weight: bold;
@@ -190,7 +199,7 @@ body {
   outline: none;
   background: none;
   color: white;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .input-field::placeholder {
@@ -267,13 +276,16 @@ body {
 
 /* Form Đăng Ký */
 .register-form {
-  top: 570px;
-  /* ví dụ bạn muốn đẩy lên cao hơn */
-  left: 48.43%;
-  /* ví dụ căn giữa */
-  transform: translate(-50%, -50%);
-  width: 25%;
-  /* có thể rộng hơn login nếu muốn */
+  position: absolute;
+  top: 435px;
+  left: 48.5%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 20%;
+  padding: 2em;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .register-btn {
@@ -306,10 +318,9 @@ body {
 /* Form Quên Mật Khẩu */
 .forgot-form {
   position: absolute;
-  top: 565px;
-  /* vị trí có thể chỉnh tuỳ ý */
-  left: 535px;
-  transform: translate(-50%, -50%);
+  top: 420px;
+  left: 48.5%;
+  transform: translate(-50%, -50%) scale(0.85);
   width: 20%;
   padding: 2em;
   color: #ffffff;
@@ -338,7 +349,7 @@ body {
   position: absolute;
   top: 0%;
   /* khoảng cách từ mép trên */
-  right: 125px;
+  right: 100px;
   /* sát bên phải */
   font-size: 22px;
   color: white;

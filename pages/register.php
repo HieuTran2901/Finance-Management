@@ -51,6 +51,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../css/style.css">
     <title>Đăng ký</title>
 </head>
+<style>
+.error-message {
+    font-size: 15px;
+    font-weight: 600;
+
+    background: linear-gradient(135deg, #0ba60bff, #5a0d0dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* hỗ trợ thêm */
+    background-clip: text;
+    color: transparent;
+
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+</style>
 <body>
     <!-- Tuyết rơi -->
     <div class="snow"></div>
@@ -58,18 +77,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Người tuyết bên trái -->
     <div class="snowman">
-        <img src="../css/snowman.png" alt="Người tuyết">
+        <img src="../css/img/onggia.png" alt="Người tuyết">
     </div>
 
     <!-- Cây thông -->
     <div class="tree-container">
-        <img src="../css/christmas_tree.png" alt="Cây thông" class="tree-img">
+        <img src="../css/img/caythong.png" alt="Cây thông" class="tree-img">
     </div>
 
 <div class="image-container">
     <div class="form register-form">
         <div id="heading">Đăng ký</div>
-        <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
         <form method="POST" action="">
             <div class="field">
                 <input class="input-field" type="text" name="username" placeholder="Tên đăng nhập" required>
@@ -91,6 +109,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="link register-link">
             <p>Bạn đã có tài khoản? <a href="login.php">Đăng nhập</a></p>
         </div>
+        <?php if (!empty($error)) : ?>
+            <div class="error-message <?= $error_type ?>">
+                <?= $error ?>
+            </div>
+        <?php endif; ?>
+
     </div>
 </div>
 

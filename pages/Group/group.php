@@ -147,34 +147,16 @@ foreach ($data as &$group) {
 <body class="bg-gray-100 font-sans">
   <div class="flex min-h-screen pl-64">
     <!-- Sidebar -->
-    <aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 shadow-lg flex flex-col justify-between z-10">
-      <div class="p-6">
-        <div class="flex items-center gap-2 mb-8">
-          <img src="https://img.icons8.com/ios/50/wallet--v1.png" class="w-7 h-7" alt="Logo" />
-          <span class="text-xl font-bold text-gray-800">FinManager</span>
-        </div>
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 bg-green-500 text-white flex items-center justify-center rounded-full font-bold text-sm">
-            <?= strtoupper(substr($users['username'], 0, 1)) ?>
-          </div>
-          <div class="leading-4">
-            <p class="text-gray-800 font-semibold"><?= htmlspecialchars($users['username']) ?></p>
-            <p class="text-gray-500 text-sm">Tài khoản cá nhân</p>
-          </div>
-        </div>
-        <!-- Menu -->
-        <?php
-          $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
-          renderSidebar($users, $currentPage,"../../pages","../../index.php","../../dangkydangnhap/logout.php");
-        ?>
-        <!--  -->
-      </div>  
-      <div class="p-6 border-t border-gray-200">
-        <a href="../logout.php" class="flex items-center gap-3 text-red-500 hover:text-red-600 font-medium transition">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-        </a>
-      </div>
-    </aside>
+     <?php
+      $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
+       renderSidebar(
+        $users,
+        $currentPage,
+        "../../pages",
+        "../../index.php",
+        "../../pages/logout.php"
+      );
+    ?>
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
@@ -187,8 +169,10 @@ foreach ($data as &$group) {
                            class="w-full border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
                 </div>
                 <button type="submit" name="create_group"
-                        class="bg-emerald-600 text-white px-6 py-2.5 rounded-lg shadow hover:bg-emerald-700 transition font-semibold">
-                    <i class="fa-solid fa-plus mr-1"></i> Tạo nhóm
+                        class="bg-gradient-to-br from-emerald-900 via-green-700 to-teal-500
+                        text-white px-6 py-2.5 rounded-lg shadow-lg
+                        hover:shadow-xl hover:scale-105
+                        transition-all duration-300 font-semibold"><i ></i> Tạo nhóm
                 </button>
             </form>
             <?= $create_message ?>

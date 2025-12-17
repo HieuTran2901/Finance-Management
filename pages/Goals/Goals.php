@@ -26,7 +26,13 @@
     $users_id = $sessionData['user_id'];
 
     $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
-    renderSidebar($users, $currentPage, "../../pages","../../index.php","../../dangkydangnhap/logout.php");
+    renderSidebar(
+        $users,
+        $currentPage,
+        "../../pages",
+        "../../index.php",
+        "../../pages/logout.php"
+      );
 
 
     // Lấy số dư ví người dùng

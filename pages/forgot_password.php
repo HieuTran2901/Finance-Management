@@ -52,13 +52,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="snow"></div>
 <div class="bottom_snow"></div>
 
-<div class="snowman">
-    <img src="../css/snowman.png" alt="Người tuyết">
-</div>
+    <div class="snowman">
+        <img src="../css/img/onggia.png" alt="Người tuyết">
+    </div>
 
-<div class="tree-container">
-    <img src="../css/christmas_tree.png" alt="Cây thông" class="tree-img">
-</div>
+    <!-- Cây thông -->
+    <div class="tree-container">
+        <img src="../css/img/caythong.png" alt="Cây thông" class="tree-img">
+    </div>
 
 <div class="image-container">
     

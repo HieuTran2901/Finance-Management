@@ -107,52 +107,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
   </script>
 <?php endif ?>
-<body class="bg-gray-100 p-6 font-sans">
-<div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
-  <h1 class="text-xl font-semibold mb-4">Thêm giao dịch nhóm</h1>
-  
+<body class="font-sans min-h-screen flex items-center justify-center bg-gray-100">
 
-  <form method="POST">
-    <label class="block font-medium mb-1">Số tiền</label>
-    <input name="amount" type="number" step="0.01" required value="<?= htmlspecialchars($amount) ?>" class="w-full border p-2 rounded mb-4">
+  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+      THÊM GIAO DỊCH NHÓM
+    </h1>
 
-    <label class="block font-medium mb-1">Mô tả</label>
-    <input name="description" type="text" required 
-    oninvalid="this.setCustomValidity('Vui lòng nhập mô tả.')"
-     oninput="this.setCustomValidity('')"
-    
-    value="<?= htmlspecialchars($description) ?>" class="w-full border p-2 rounded mb-4">
+    <form method="POST">
 
-   <div class="mb-4">
-      <label class="block font-medium mb-1">Kiểu chia</label>
-      <div class="flex gap-4">
-        <button type="button" id="btn-equal" class="split-btn bg-blue-500 text-white px-4 py-2 rounded" data-type="equal">
-          Chia đều
-        </button>
-        <button type="button" id="btn-custom" class="split-btn bg-gray-300 text-black px-4 py-2 rounded" data-type="custom">
-          Chia từng người
+      <!-- Số tiền -->
+      <div class="mb-4">
+        <label class="block font-medium mb-1">Số tiền</label>
+        <input
+          name="amount"
+          type="number"
+          step="0.01"
+          required
+          value="<?= htmlspecialchars($amount) ?>"
+          class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+        >
+      </div>
+
+      <!-- Mô tả -->
+      <div class="mb-4">
+        <label class="block font-medium mb-1">Mô tả</label>
+        <input
+          name="description"
+          type="text"
+          required
+          value="<?= htmlspecialchars($description) ?>"
+          oninvalid="this.setCustomValidity('Vui lòng nhập mô tả.')"
+          oninput="this.setCustomValidity('')"
+          class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+        >
+      </div>
+
+      <!-- Kiểu chia -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Kiểu chia</label>
+
+        <div class="flex gap-4">
+          <button
+            type="button"
+            id="btn-equal"
+            data-type="equal"
+            class="split-btn flex-1 py-2 rounded font-semibold text-white
+                   bg-gradient-to-r from-blue-500 to-blue-700
+                   hover:from-blue-600 hover:to-blue-800 transition">
+            Chia đều
+          </button>
+
+          <button
+            type="button"
+            id="btn-custom"
+            data-type="custom"
+            class="split-btn flex-1 py-2 rounded font-semibold
+                   bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+            Chia từng người
+          </button>
+        </div>
+
+        <input type="hidden" name="split_type" id="split_type" value="equal">
+      </div>
+
+      <!-- Chia custom -->
+      <div id="custom-split-section" class="hidden mt-4 border rounded-lg p-4 bg-gray-50">
+        <label class="block font-medium mb-3">Phân chia từng người</label>
+
+        <?php foreach ($members as $m): ?>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-28 text-sm font-medium">
+              <?= htmlspecialchars($m['username']) ?>
+            </span>
+            <input
+              type="number"
+              step="0.01"
+              name="custom_share[<?= $m['id'] ?>]"
+              class="flex-1 border p-2 rounded focus:ring-2 focus:ring-blue-400 outline-none"
+              placeholder="Nhập số tiền"
+            >
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <!-- Nút -->
+      <div class="flex gap-4 justify-end mt-6">
+        <a
+          href="../group_detail.php?id=<?= $group_id ?>"
+          class="px-4 py-2 rounded text-white font-semibold
+                 bg-gradient-to-r from-red-500 to-red-700
+                 hover:from-red-600 hover:to-red-800 transition">
+          Huỷ
+        </a>
+
+        <button
+          type="submit"
+          class="px-4 py-2 rounded text-white font-semibold
+                 bg-gradient-to-r from-blue-500 to-blue-700
+                 hover:from-blue-600 hover:to-blue-800 transition">
+          Lưu giao dịch
         </button>
       </div>
-      <input type="hidden" name="split_type" id="split_type" value="equal">
-    </div>
-    <div id="custom-split-section" class="hidden mt-4">
-    <label class="block font-medium mb-2">Phân chia từng người:</label>
-      <?php foreach ($members as $m): ?>
-        <div class="flex items-center gap-2 mb-2">
-          <label class="w-32"><?= htmlspecialchars($m['username']) ?></label>
-          <input type="number" step="0.01" name="custom_share[<?= $m['id'] ?>]" class="border p-2 rounded w-full" placeholder="Nhập số tiền">
-        </div>
-      <?php endforeach; ?>
-    </div>
 
+    </form>
+  </div>
 
-    <div class="flex justify-between">
-      <a href="../group_detail.php?id=<?= $group_id ?>" class="bg-gray-500 text-white px-4 py-2 rounded">Huỷ</a>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lưu giao dịch</button>
-    </div>
-  </form>
-</div>
 </body>
+
 </html>
 
 <script>
@@ -163,21 +225,23 @@ document.addEventListener('DOMContentLoaded', function () {
   const customSection = document.getElementById("custom-split-section");
 
   function activate(type) {
-    splitType.value = type;
-    if (type === "equal") {
-      btnEqual.classList.add("bg-blue-500", "text-white");
-      btnEqual.classList.remove("bg-gray-300", "text-black");
-      btnCustom.classList.add("bg-gray-300", "text-black");
-      btnCustom.classList.remove("bg-blue-500", "text-white");
-      customSection.classList.add("hidden");
-    } else {
-      btnCustom.classList.add("bg-blue-500", "text-white");
-      btnCustom.classList.remove("bg-gray-300", "text-black");
-      btnEqual.classList.add("bg-gray-300", "text-black");
-      btnEqual.classList.remove("bg-blue-500", "text-white");
-      customSection.classList.remove("hidden");
-    }
+  splitType.value = type;
+
+  if (type === "equal") {
+    btnEqual.className =
+      "split-btn flex-1 py-2 rounded font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700";
+    btnCustom.className =
+      "split-btn flex-1 py-2 rounded font-semibold bg-gray-200 text-gray-700";
+    customSection.classList.add("hidden");
+  } else {
+    btnCustom.className =
+      "split-btn flex-1 py-2 rounded font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700";
+    btnEqual.className =
+      "split-btn flex-1 py-2 rounded font-semibold bg-gray-200 text-gray-700";
+    customSection.classList.remove("hidden");
   }
+}
+
 
   btnEqual.addEventListener("click", () => activate("equal"));
   btnCustom.addEventListener("click", () => activate("custom"));

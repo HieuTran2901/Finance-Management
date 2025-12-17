@@ -46,7 +46,15 @@
     <!-- Sidebar -->
     <?php
       $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
-      renderSidebar($users, $currentPage, "../../pages","../../index.php","../../dangkydangnhap/logout.php");
+      
+      renderSidebar(
+        $users,
+        $currentPage,
+        "../../pages",
+        "../../index.php",
+        "../../pages/logout.php"
+      );
+
     ?>
 
     <!-- Main content --> 
@@ -283,116 +291,6 @@
 
     <!--MODAL -->
 
-    <!----------------------------------- ADD WALLET MODAL ---------------------------------->
-        <div id="addWalletModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-            <iframe src="add_wallet.php" 
-            class="w-full h-[90vh] border-none rounded-xl bg-transparent" 
-            loading="lazy"></iframe>
-        </div>
-        <script>
-          function openAddWalletModal() {
-            const modal = document.getElementById("addWalletModal");
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
-        }
-
-        function closeAddWalletModal() {
-            const modal = document.getElementById("addWalletModal");
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-        }
-
-        </script>
-
-<!----------------------------------- EDIT WALLET MODAL ---------------------------------->
-        <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div class="w-full max-w-xl animate-popup">
-            <iframe 
-              src=""
-              id="editWalletFrame"
-              class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-              loading="lazy">
-            </iframe>
-          </div>
-        </div>
-
-
-        <script>
-        function openEditWalletModal(id) {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "../Wallet/edit_wallet.php?id=" + id;
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-        }
-
-        function closeEditWalletModal() {
-          const modal = document.getElementById("editWalletModal");
-          const iframe = document.getElementById("editWalletFrame");
-
-          iframe.src = "";
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-        </script>
-
-    <!----------------------------------- ADD TAG MODAL ---------------------------------->
-    <div id="addTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-      <div class="w-full max-w-xl animate-popup">
-
-        <!-- IFRAME CHỈ CÒN FORM, KHÔNG VIỀN, KHÔNG HEADER -->
-        <iframe 
-          src="add_tag.php"
-          class="w-full h-[90vh] border-none rounded-xl bg-transparent"
-          loading="lazy">
-        </iframe>
-
-      </div>
-    </div>
-
-    <script>
-      function openAddTagModal() {
-        document.getElementById("addTagModal").classList.remove("hidden");
-        document.getElementById("addTagModal").classList.add("flex");
-      }
-
-      function closeAddTagModal() {
-        document.getElementById("addTagModal").classList.add("hidden");
-        document.getElementById("addTagModal").classList.remove("flex");
-      }
-    </script>
-
-    <!----------------------------------- EDIT TAG MODAL ---------------------------------->
-    <div id="editTagModal" class="fixed inset-0 z-50 bg-black/50 hidden items-center justify-center backdrop-blur-sm">
-      <div class="w-full max-w-xl animate-popup">
-        <iframe 
-          src=""
-          id="editTagFrame"
-          class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
-    <script>
-      function openEditTagModal(id) {
-        const modal = document.getElementById("editTagModal");
-        const iframe = document.getElementById("editTagFrame");
-
-        iframe.src = "edit_tag.php?id=" + id;
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      }
-
-      function closeEditTagModal() {
-        const modal = document.getElementById("editTagModal");
-        const iframe = document.getElementById("editTagFrame");
-
-        iframe.src = "";
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }
-    </script>
      
     <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"> <!-- Bọc bảng trong container có bo tròn và đổ bóng -->
         <table class="min-w-full table-auto divide-y divide-gray-200"> <!-- Bỏ border của table, dùng divide-y -->

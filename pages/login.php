@@ -53,20 +53,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../css/style.css">
     <title>Đăng Nhập</title>
 </head>
-<body>
 
+<body>
     <!-- Tuyết rơi -->
     <div class="snow"></div>
     <div class="bottom_snow"></div>
 
     <!-- Người tuyết bên trái -->
     <div class="snowman">
-        <img src="../css/img/snowman.png" alt="Người tuyết">
+        <img src="../css/img/onggia.png" alt="Người tuyết">
     </div>
 
     <!-- Cây thông -->
     <div class="tree-container">
-        <img src="../css/img/christmas_tree.png" alt="Cây thông" class="tree-img">
+        <img src="../css/img/caythong.png" alt="Cây thông" class="tree-img">
     </div>
 
     <div class="image-container">

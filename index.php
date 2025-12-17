@@ -102,6 +102,7 @@
   <link rel="stylesheet" href="./css/index.css">
   <link rel="stylesheet" href="./css/fadein.css">
 
+  
 </head>
 <!-- Modal -->
  
@@ -437,8 +438,6 @@ new Chart(ctx, {
             once: true, // Chỉ animate khi cuộn qua lần đầu tiên
             mirror: false // Không lặp lại animation khi cuộn lên
         });
-
-        // Optional: Smooth scroll for internal links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
