@@ -290,8 +290,13 @@
 
 
     <!--MODAL -->
-
-     
+            <?php
+              include "modals/add_wallet_modal.php";
+              include "modals/edit_wallet_modal.php";
+              include "modals/add_tag_modal.php";
+              include "modals/edit_tag_modal.php";
+              ?>        
+                  
     <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"> <!-- Bọc bảng trong container có bo tròn và đổ bóng -->
         <table class="min-w-full table-auto divide-y divide-gray-200"> <!-- Bỏ border của table, dùng divide-y -->
             <thead class="bg-gray-50"> <!-- Nền header nhẹ -->

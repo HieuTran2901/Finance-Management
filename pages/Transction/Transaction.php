@@ -241,38 +241,11 @@
     <?php endif; ?>
 </div>
 
-  <!----------------------------------- EDIT WALLET MODAL ---------------------------------->
-                            <div id="editWalletModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                              <div class="w-full max-w-xl animate-popup">
-                                <iframe 
-                                  src=""
-                                  id="editWalletFrame"
-                                  class="w-full h-[90vh] border-none rounded-xl  bg-transparent"
-                                  loading="lazy">
-                                </iframe>
-                              </div>
-                            </div>
-
-
-                            <script>
-                            function openEditWalletModal(id) {
-                              const modal = document.getElementById("editWalletModal");
-                              const iframe = document.getElementById("editWalletFrame");
-
-                              iframe.src = "../Wallet/edit_wallet.php?id=" + id;
-                              modal.classList.remove("hidden");
-                              modal.classList.add("flex");
-                            }
-
-                            function closeEditWalletModal() {
-                              const modal = document.getElementById("editWalletModal");
-                              const iframe = document.getElementById("editWalletFrame");
-
-                              iframe.src = "";
-                              modal.classList.add("hidden");
-                              modal.classList.remove("flex");
-                            }
-                            </script>
+  <?php
+include "../Wallet/modals/edit_wallet_modal.php";
+include "modals/add_transaction_modal.php";
+include "modals/edit_transaction_modal.php";
+?>
   <!-- Transactions Section -->
   <div class="bg-white rounded-xl shadow-lg p-6"> <!-- Tăng đổ bóng và bo tròn góc -->
         <div class="flex flex-col mb-6 border-b pb-4">

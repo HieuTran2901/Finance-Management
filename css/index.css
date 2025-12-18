@@ -1,15 +1,20 @@
 /* Định nghĩa animation tùy chỉnh cho hiệu ứng "rung" nhẹ nhàng */
 @keyframes pulse-custom {
+
   0%,
   100% {
     transform: scale(1);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Bóng đổ gốc */
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    /* Bóng đổ gốc */
   }
+
   50% {
-    transform: scale(1.05); /* Phóng to nhẹ */
+    transform: scale(1.05);
+    /* Phóng to nhẹ */
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
-      0 10px 10px -5px rgba(0, 0, 0, 0.08); /* Bóng đổ mạnh hơn */
+      0 10px 10px -5px rgba(0, 0, 0, 0.08);
+    /* Bóng đổ mạnh hơn */
   }
 }
 
@@ -22,28 +27,36 @@
   0% {
     transform: rotate(0deg);
   }
+
   10% {
     transform: rotate(14deg);
   }
+
   20% {
     transform: rotate(-8deg);
   }
+
   30% {
     transform: rotate(14deg);
   }
+
   40% {
     transform: rotate(-4deg);
   }
+
   50% {
     transform: rotate(10deg);
   }
+
   60% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
 }
+
 .animate-waving-hand {
   display: inline-block;
   animation: wave 2s infinite;
