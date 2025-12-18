@@ -1,3 +1,5 @@
+@import url("root.css");
+
 body {
   margin: 0;
   height: 100vh;
@@ -141,9 +143,9 @@ body {
 .image-container {
   position: relative;
   bottom: 20px;
-  width: 825px;
+  width: var(--login-image-container-width);
   /* 1100 × 0.75 */
-  height: 675px;
+  height: var(--login-image-container-height);
   /* 900 × 0.75 */
   /* giới hạn chiều cao ảnh */
   background-image: url("../css/img/nhanonl.png");
@@ -159,12 +161,12 @@ body {
   position: absolute;
   top: 420px;
   left: 48.5%;
-  transform: translate(-50%, -50%) scale(0.85);
+  transform: translate(-50%, -50%) scale(var(--form-scale));
   width: 20%;
   padding: 2em;
   color: #ffffff;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   align-items: center;
 }
 
@@ -231,17 +233,18 @@ body {
   font-weight: 500;
   letter-spacing: 0.5px;
   transition: 0.25s;
-  margin-left: 15px;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* Nền gradient riêng cho từng nút */
 .button1 {
   background: linear-gradient(135deg, #9dd2ee, #5497cb);
+  margin-left: var(--margin-button-1);
 }
 
 .button2 {
   background: linear-gradient(135deg, #cd7771, #aa6767);
+  margin-left: var(--margin-button-2);
 }
 
 .button1:hover {
@@ -279,7 +282,7 @@ body {
   position: absolute;
   top: 435px;
   left: 48.5%;
-  transform: translate(-50%, -50%) scale(0.85);
+  transform: translate(-50%, -50%) scale(var(--form-scale));
   width: 20%;
   padding: 2em;
   color: #ffffff;
@@ -320,7 +323,7 @@ body {
   position: absolute;
   top: 420px;
   left: 48.5%;
-  transform: translate(-50%, -50%) scale(0.85);
+  transform: translate(-50%, -50%) scale(var(--form-scale));
   width: 20%;
   padding: 2em;
   color: #ffffff;
