@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../module/config.php';
+include "../../Func/SQL_Cmd.php";
 session_start();
 $errors = [];
 
@@ -131,6 +132,14 @@ $tags_suggest = [];
 while ($row = $tags_result->fetch_assoc()) {
     $tags_suggest[] = $row['name'];
 }
+// if($wallet_id > 0) {
+//   $sql = "SELECT t.name FROM Tags t JOIN Wallet_Tags wt ON t.id = wt.tag_id WHERE wt.wallet_id = ? AND t.user_id = ?";
+//   $tags_result = SQL_Select($conn, $sql, "ii", [$wallet_id, $user_id]);
+  
+//   foreach ($tags_result as $row) {
+//       $tags_suggest[] = $row['name'];
+//   }
+// }
 ?>
 
 

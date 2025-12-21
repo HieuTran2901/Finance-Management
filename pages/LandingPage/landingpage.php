@@ -245,7 +245,7 @@
             });
         });
     </script>
-    <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+    
     <script>
         const modal = document.getElementById("comingSoonModal");
         const closeModal = document.getElementById("closeModal");

@@ -14,64 +14,50 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 $transaction_id = intval($_GET['id'] ?? 0);
+if ($transaction_id <= 0) die("Thiếu ID giao dịch.");
 
-if ($transaction_id <= 0) {
-  die("Thiếu ID giao dịch.");
-}
-
-/* ============================
+/* =========================
   1. LẤY GIAO DỊCH
-============================ */
- // Lấy thông tin giao dịch để điền vào form
-    $stmt = $conn->prepare("
-      SELECT t.*, c.name AS category_name 
-      FROM Transactions t 
-      JOIN Categories c ON t.category_id = c.id 
-      WHERE t.id = ? AND t.user_id = ?
-    ");
-
+========================= */
+$stmt = $conn->prepare("
+  SELECT t.*, c.name AS category_name
+  FROM Transactions t
+  JOIN Categories c ON t.category_id = c.id
+  WHERE t.id = ? AND t.user_id = ?
+");
 $stmt->bind_param("ii", $transaction_id, $user_id);
 $stmt->execute();
-$result = $stmt->get_result();
-$transaction = $result->fetch_assoc();
+$transaction = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$transaction) die("Không tìm thấy giao dịch.");
 
-/* ============================
-  2. TAG CỦA GIAO DỊCH
-============================ */
-$tags_current = [];
+/* =========================
+  2. TAG HIỆN TẠI (1 TAG)
+========================= */
+$current_tag = '';
 $stmt = $conn->prepare("
-  SELECT T.name FROM Tags T
+  SELECT T.name
+  FROM Tags T
   JOIN Transaction_Tags TT ON TT.tag_id = T.id
   WHERE TT.transaction_id = ?
+  LIMIT 1
 ");
 $stmt->bind_param("i", $transaction_id);
 $stmt->execute();
-$res = $stmt->get_result();
-while ($row = $res->fetch_assoc()) {
-  $tags_current[] = $row['name'];
-}
+$stmt->bind_result($current_tag);
+$stmt->fetch();
 $stmt->close();
 
-$tags_value = implode(",", $tags_current);
-
-/* ============================
-  3. VÍ & TAG GỢI Ý
-============================ */
+/* =========================
+  3. VÍ
+========================= */
 $wallets_result = $conn->query("SELECT id, name FROM Wallets WHERE user_id = $user_id");
-$tags_result = $conn->query("SELECT name FROM Tags WHERE user_id = $user_id");
 
-$tags_suggest = [];
-while ($row = $tags_result->fetch_assoc()) {
-  $tags_suggest[] = $row['name'];
-}
-
-/* ============================
+/* =========================
   4. UPDATE
-============================ */
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+========================= */
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   $wallet_id = intval($_POST["wallet_id"]);
   $category_name = trim($_POST["category"]);
@@ -80,18 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $note = $_POST["note"];
   $date = $_POST["date"];
   $emotion = intval($_POST["emotion_level"] ?? 1);
-  $tags = array_filter(array_map("trim", explode(",", $_POST["tags"] ?? "")));
+  $tag = trim($_POST["tag"] ?? '');
 
   $receipt_url = $transaction['photo_receipt_url'];
 
+  /* ===== UPLOAD ẢNH ===== */
   if (!empty($_FILES["photo_receipt"]["name"])) {
     $filename = time() . '_' . basename($_FILES["photo_receipt"]["name"]);
-    $target_dir = __DIR__ . "/uploads/";
-    $target_path = $target_dir . $filename;
+    $dir = __DIR__ . "/uploads/";
+    if (!is_dir($dir)) mkdir($dir, 0755, true);
 
-    if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
-
-    if (move_uploaded_file($_FILES["photo_receipt"]["tmp_name"], $target_path)) {
+    if (move_uploaded_file($_FILES["photo_receipt"]["tmp_name"], $dir . $filename)) {
       $receipt_url = "uploads/" . $filename;
     } else {
       $errors[] = "Không thể lưu ảnh mới.";
@@ -99,47 +84,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   /* ===== CATEGORY ===== */
-  $stmt = $conn->prepare("SELECT id FROM Categories WHERE name = ? AND user_id = ?");
+  $stmt = $conn->prepare("SELECT id FROM Categories WHERE name=? AND user_id=?");
   $stmt->bind_param("si", $category_name, $user_id);
   $stmt->execute();
   $stmt->bind_result($category_id);
 
   if (!$stmt->fetch()) {
     $stmt->close();
-    $icon = "❓";
-    $stmt = $conn->prepare("INSERT INTO Categories (name, icon, type, user_id) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sssi", $category_name, $icon, $type, $user_id);
+    $stmt = $conn->prepare("
+      INSERT INTO Categories (name, icon, type, user_id)
+      VALUES (?, '❓', ?, ?)
+    ");
+    $stmt->bind_param("ssi", $category_name, $type, $user_id);
     $stmt->execute();
     $category_id = $stmt->insert_id;
-  } else {
-    $stmt->close();
   }
+  $stmt->close();
 
-  /* ===== KIỂM TRA TAG ===== */
-  foreach ($tags as $tag_name) {
-    $stmt = $conn->prepare("SELECT id, limit_amount FROM Tags WHERE name = ? AND user_id = ?");
-    $stmt->bind_param("si", $tag_name, $user_id);
+  /* ===== KIỂM TRA TAG LIMIT ===== */
+  if ($tag) {
+    $stmt = $conn->prepare("SELECT id, limit_amount FROM Tags WHERE name=? AND user_id=?");
+    $stmt->bind_param("si", $tag, $user_id);
     $stmt->execute();
     $tag_data = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    if (!$tag_data) continue;
+    if ($tag_data) {
+      $stmt = $conn->prepare("
+        SELECT COALESCE(SUM(t.amount),0)
+        FROM Transactions t
+        JOIN Transaction_Tags tt ON t.id = tt.transaction_id
+        WHERE tt.tag_id=? AND t.wallet_id=? AND t.id != ?
+      ");
+      $stmt->bind_param("iii", $tag_data['id'], $wallet_id, $transaction_id);
+      $stmt->execute();
+      $stmt->bind_result($used_amount);
+      $stmt->fetch();
+      $stmt->close();
 
-    $stmt = $conn->prepare("
-      SELECT COALESCE(SUM(t.amount), 0)
-      FROM Transactions t
-      JOIN Transaction_Tags tt ON t.id = tt.transaction_id
-      WHERE tt.tag_id = ? AND t.wallet_id = ? AND t.id != ?
-    ");
-    $stmt->bind_param("iii", $tag_data['id'], $wallet_id, $transaction_id);
-    $stmt->execute();
-    $stmt->bind_result($used_amount);
-    $stmt->fetch();
-    $stmt->close();
-
-    if (($used_amount + $amount) > $tag_data['limit_amount']) {
-      $errors[] = "Giao dịch vượt giới hạn tag: {$tag_name}";
-      break;
+      if (($used_amount + $amount) > $tag_data['limit_amount']) {
+        $errors[] = "Giao dịch vượt giới hạn tag: {$tag}";
+      }
     }
   }
 
@@ -147,8 +132,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($errors)) {
 
     $stmt = $conn->prepare("
-      UPDATE Transactions 
-      SET wallet_id=?, category_id=?, amount=?, type=?, date=?, note=?, photo_receipt_url=?, emotion_level=?, edit_at=NOW()
+      UPDATE Transactions
+      SET wallet_id=?, category_id=?, amount=?, type=?, date=?, note=?,
+          photo_receipt_url=?, emotion_level=?, edit_at=NOW()
       WHERE id=? AND user_id=?
     ");
     $stmt->bind_param(
@@ -167,21 +153,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $stmt->close();
 
+    /* TAG */
     $conn->query("DELETE FROM Transaction_Tags WHERE transaction_id = $transaction_id");
 
-    foreach ($tags as $tag_name) {
-      $stmt = $conn->prepare("SELECT id FROM Tags WHERE name = ? AND user_id = ?");
-      $stmt->bind_param("si", $tag_name, $user_id);
+    if ($tag && $tag_data) {
+      $stmt = $conn->prepare("
+        INSERT INTO Transaction_Tags (transaction_id, tag_id)
+        VALUES (?, ?)
+      ");
+      $stmt->bind_param("ii", $transaction_id, $tag_data['id']);
       $stmt->execute();
-      $tag = $stmt->get_result()->fetch_assoc();
       $stmt->close();
-
-      if ($tag) {
-        $stmt = $conn->prepare("INSERT INTO Transaction_Tags (transaction_id, tag_id) VALUES (?, ?)");
-        $stmt->bind_param("ii", $transaction_id, $tag['id']);
-        $stmt->execute();
-        $stmt->close();
-      }
     }
 
     echo "<script>
@@ -192,7 +174,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -200,97 +181,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <title>Chỉnh sửa Giao Dịch</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="flex items-center justify-center min-h-screen">
 
-<body class="font-sans min-h-screen flex items-center justify-center">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+<div class="bg-white p-6 rounded shadow w-full max-w-lg">
 
-    <h1 class="text-2xl font-bold mb-6 text-center">CHỈNH SỬA GIAO DỊCH</h1>
+<h2 class="text-xl font-bold mb-4 text-center">CHỈNH SỬA GIAO DỊCH</h2>
 
-    <?php if (!empty($errors)): ?>
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        <?php foreach ($errors as $e): ?>
-          <div>- <?= htmlspecialchars($e) ?></div>
-        <?php endforeach ?>
-      </div>
-    <?php endif ?>
-
-    <form method="POST" enctype="multipart/form-data">
-
-      <div class="mb-3">
-        <label>Tên</label>
-        <input name="category" class="w-full border p-2 rounded" value="<?= htmlspecialchars($transaction['category_name']) ?>">
-      </div>
-
-      <div class="mb-3">
-        <label>Chọn ví</label>
-        <select name="wallet_id" class="w-full border p-2 rounded">
-          <?php while ($wallet = $wallets_result->fetch_assoc()): ?>
-            <option value="<?= $wallet['id'] ?>" <?= $transaction['wallet_id'] == $wallet['id'] ? 'selected' : '' ?>>
-              <?= htmlspecialchars($wallet['name']) ?>
-            </option>
-          <?php endwhile ?>
-        </select>
-      </div>
-
-      <div class="flex gap-4 mb-3">
-        <div class="flex-1">
-          <label>Loại</label>
-          <select name="type" id="type" class="w-full border p-2 rounded">
-            <option value="expense" <?= $transaction['type'] == 'expense' ? 'selected' : '' ?>>Chi</option>
-            <option value="income" <?= $transaction['type'] == 'income' ? 'selected' : '' ?>>Thu</option>
-          </select>
-        </div>
-
-        <div class="flex-1">
-          <label>Số tiền</label>
-          <input type="number" name="amount" value="<?= $transaction['amount'] ?>" class="w-full border p-2 rounded">
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <input type="datetime-local" name="date"
-         value="<?= date('Y-m-d\TH:i', strtotime($transaction['date'])) ?>"
-         class="w-full border p-2 rounded">
-      </div>
-
-      <div class="mb-3">
-        <input type="text" name="note" class="w-full border p-2 rounded"
-         value="<?= htmlspecialchars($transaction['note']) ?>">
-      </div>
-
-      <div class="mb-3">
-        <label>Ảnh mới</label>
-        <input type="file" name="photo_receipt" class="w-full border p-2 rounded">
-      </div>
-
-      <div class="mb-3" id="tags-section">
-        <label>Tags</label>
-        <input type="text" name="tags" list="tags-list"
-         class="w-full border p-2 rounded" value="<?= htmlspecialchars($tags_value) ?>">
-        <datalist id="tags-list">
-          <?php foreach ($tags_suggest as $tag): ?>
-            <option value="<?= htmlspecialchars($tag) ?>">
-          <?php endforeach ?>
-        </datalist>
-      </div>
-
-      <div class="flex justify-end gap-3 mt-4">
-        <button type="button" onclick="window.parent.closeEditTransactionModal()"
-          class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-red-500 to-red-700
-                hover:from-red-600 hover:to-red-800
-                transition-colors duration-300">
-          Huỷ
-        </button>
-        <button type="submit"
-          class="px-4 py-2 rounded text-white font-semibold
-                bg-gradient-to-r from-blue-500 to-blue-700
-                hover:from-blue-600 hover:to-blue-800
-                transition-colors duration-300">
-          Cập nhật
-        </button>
-
-    </form>
+<?php if ($errors): ?>
+  <div class="bg-red-100 text-red-700 p-3 rounded mb-3">
+    <?php foreach ($errors as $e): ?>
+      <div>- <?= htmlspecialchars($e) ?></div>
+    <?php endforeach ?>
   </div>
+<?php endif ?>
+
+<form method="POST" enctype="multipart/form-data">
+
+<input name="category" class="w-full border p-2 mb-3 rounded"
+ value="<?= htmlspecialchars($transaction['category_name']) ?>">
+
+<select name="wallet_id" class="w-full border p-2 mb-3 rounded" id="wallet">
+<?php while ($w = $wallets_result->fetch_assoc()): ?>
+  <option value="<?= $w['id'] ?>" <?= $w['id']==$transaction['wallet_id']?'selected':'' ?>>
+    <?= htmlspecialchars($w['name']) ?>
+  </option>
+<?php endwhile ?>
+</select>
+
+<select name="type" id="type" class="w-full border p-2 mb-3 rounded">
+  <option value="expense" <?= $transaction['type']=='expense'?'selected':'' ?>>Chi</option>
+  <option value="income" <?= $transaction['type']=='income'?'selected':'' ?>>Thu</option>
+</select>
+
+<input type="number" name="amount" class="w-full border p-2 mb-3 rounded"
+ value="<?= $transaction['amount'] ?>">
+
+<input type="datetime-local" name="date"
+ value="<?= date('Y-m-d\TH:i', strtotime($transaction['date'])) ?>"
+ class="w-full border p-2 mb-3 rounded">
+
+<input name="note" class="w-full border p-2 mb-3 rounded"
+ value="<?= htmlspecialchars($transaction['note']) ?>">
+
+<input type="file" name="photo_receipt" class="w-full border p-2 mb-3 rounded">
+
+<select name="tag" id="tag" class="w-full border p-2 mb-4 rounded">
+  <option value="">-- Chọn tag --</option>
+</select>
+
+<div class="flex justify-end gap-3">
+<button type="button" onclick="window.parent.closeEditTransactionModal()"
+ class="px-4 py-2 bg-red-600 text-white rounded">Huỷ</button>
+<button type="submit"
+ class="px-4 py-2 bg-blue-600 text-white rounded">Cập nhật</button>
+</div>
+
+</form>
+</div>
+
+<script>
+const wallet = document.getElementById('wallet');
+const tagSelect = document.getElementById('tag');
+const currentTag = <?= json_encode($current_tag) ?>;
+
+function loadTags(walletId) {
+  tagSelect.innerHTML = '<option value="">-- Chọn tag --</option>';
+  fetch(`get_tags_by_wallet.php?wallet_id=${walletId}`)
+    .then(r=>r.json())
+    .then(tags=>{
+      tags.forEach(t=>{
+        const o=document.createElement('option');
+        o.value=t;
+        o.textContent=t;
+        if(t===currentTag) o.selected=true;
+        tagSelect.appendChild(o);
+      });
+    });
+}
+
+wallet.addEventListener('change',()=>loadTags(wallet.value));
+loadTags(wallet.value);
+</script>
+
 </body>
 </html>
