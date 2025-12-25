@@ -295,7 +295,7 @@ body {
   display: flex;
   justify-content: flex-end;
   /* căn nút sang phải */
-  margin-bottom: 5px;
+  margin-bottom: 1em;
   width: 100%;
   /* cho nút nằm sát bên phải */
 }
@@ -306,7 +306,6 @@ body {
   text-align: center;
   /* căn giữa text */
   font-size: 14px;
-  margin-bottom: -5px;
 }
 
 .register-link a {
@@ -322,7 +321,7 @@ body {
 /* Form Quên Mật Khẩu */
 .forgot-form {
   position: absolute;
-  top: 460px;
+  top: 420px;
   left: 48.5%;
   transform: translate(-50%, -50%) scale(var(--form-scale));
   width: 20%;
@@ -353,7 +352,7 @@ body {
   position: absolute;
   top: 0%;
   /* khoảng cách từ mép trên */
-  right: 120px;
+  right: 100px;
   /* sát bên phải */
   font-size: 22px;
   color: white;
