@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $error = "Tài khoản không tồn tại!";
-            header("Location: login.php?login=error");
+            header("Location: login.php?aut=error");
         }
 
         $stmt->close();
@@ -96,6 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div> 
     <?php 
         Notification_Notyf('login', null, 'Tài khoản hoặc mật khẩu không đúng!');
+        Notification_Notyf('aut', null, 'Tài khoản không tồn tại!');
     ?>
 </body>
 </html>

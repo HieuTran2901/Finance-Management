@@ -3,6 +3,10 @@
   // require_once __DIR__ . '/../../module/config.php';
   include '../../func/Get_Session.php';
   include '../Sidebar/Sidebar.php';
+  include "./modals/edit_tag_modal.php";
+  include "./modals/edit_wallet_modal.php";
+  include "./modals/add_wallet_modal.php";
+  include "./modals/add_tag_modal.php";
 
   $sessionData = Get_Session('../../module/config.php', '../../dangkydangnhap/login.php');
   $conn = $sessionData['conn'];
