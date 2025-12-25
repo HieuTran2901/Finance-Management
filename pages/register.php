@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     font-size: 15px;
     font-weight: 600;
 
-    background: linear-gradient(135deg, #0ba60bff, #5a0d0dff);
+    background: linear-gradient(135deg, #120049ff, #3c4213ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
@@ -65,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     color: transparent;
 
     text-align: center;
-    margin-top: 10px;
 }
 
 
