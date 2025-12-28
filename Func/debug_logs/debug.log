@@ -1,0 +1,6 @@
+[2025-12-28 13:48:51] USER INPUT
+chào bạn
+
+[2025-12-28 13:48:52] AI RAW RESPONSE
+{"error":{"message":"This request requires more credits, or fewer max_tokens. You requested up to 4000 tokens, but can only afford 596. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account","code":402,"metadata":{"provider_name":null}},"user_id":"user_2yPJFdwqs7uJfstn9kFvr4tdo2u"}
+

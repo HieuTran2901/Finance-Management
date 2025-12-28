@@ -2,11 +2,12 @@
 session_start();
 require_once '../../module/config.php';
 
-// ⛔ Nếu chưa đăng nhập → chuyển về login
+// Nếu chưa đăng nhập → chuyển về login
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../dangkydangnhap/login.php");
     exit();
 }
+include '../../Func/Notification.php';
 
 $user_id = $_SESSION['user_id'];
 
@@ -73,6 +74,40 @@ $biggest = $sql_biggest->get_result()->fetch_assoc();
 $biggest_category_name = $biggest['name'] ?? "Không có dữ liệu";
 $biggest_category_amount = $biggest['total'] ?? 0;
 
+// ====================== MỤC TIÊU TIẾT KIỆM ======================
+$sql_goals_summary = $conn->prepare("
+    SELECT
+        COUNT(*) AS total_goals,
+        SUM(saved_amount) AS total_saved,
+        SUM(target_amount) AS total_target,
+        MAX(saved_amount / target_amount) AS max_progress
+    FROM goals
+    WHERE user_id = ?
+");
+$sql_goals_summary->bind_param("i", $user_id);
+$sql_goals_summary->execute();
+$goals_summary = $sql_goals_summary->get_result()->fetch_assoc();
+
+$total_goals   = $goals_summary['total_goals'] ?? 0;
+$total_saved   = $goals_summary['total_saved'] ?? 0;
+$total_target  = $goals_summary['total_target'] ?? 0;
+
+$avg_progress = ($total_target > 0)
+    ? ($total_saved / $total_target) * 100
+    : 0;
+
+// Lấy mục tiêu gần hoàn thành nhất
+$sql_top_goal = $conn->prepare("
+    SELECT goal_name, saved_amount, target_amount
+    FROM goals
+    WHERE user_id = ? AND target_amount > 0
+    ORDER BY saved_amount / target_amount DESC
+    LIMIT 1
+");
+$sql_top_goal->bind_param("i", $user_id);
+$sql_top_goal->execute();
+$top_goal = $sql_top_goal->get_result()->fetch_assoc();
+
 // Danh sách tên ví
 $wallet_string = implode(", ", array_column($main_wallets, "name"));
 
@@ -86,7 +121,7 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 🎨 CSS UI đẹp -->
+    <!-- CSS UI -->
     <style>
         body {
             background: linear-gradient(135deg, #eef2ff, #f8fafc);
@@ -126,7 +161,7 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
 
       <!-- Nút nằm bên phải -->
       <div class="ml-auto flex gap-3">
-        <a href="edit_profile.php" class="text-sm text-white bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-lg shadow">
+        <a href="profile.php?edit=error" class="text-sm text-white bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-lg shadow">
           Chỉnh sửa
         </a>
 
@@ -147,13 +182,13 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
 
       <!-- Info (Nằm bên trái luôn khi trên PC) -->
       <div>
-        <h2 class="text-2xl font-semibold text-gray-800">Nguyễn Văn Tài</h2>
+        <h2 class="text-2xl font-semibold text-gray-800"><?= $users['username'] ?></h2>
         <p class="text-gray-600 mt-1">Email: <span class="text-blue-600"><?= $users['email'] ?></span></p>
-        <p class="text-gray-600">Số điện thoại: <span class="text-gray-800">0987 654 321</span></p>
+        <!-- <p class="text-gray-600">Số điện thoại: <span class="text-gray-800">0987 654 321</span></p>
         <p class="text-gray-600">Ngày sinh: <span class="text-gray-800">15/05/1997</span></p>
         <p class="text-gray-600">Giới tính: <span class="text-gray-800">Nam</span></p>
         <p class="text-gray-600">Địa chỉ: <span class="text-gray-800">TP. Hồ Chí Minh, Việt Nam</span></p>
-        <p class="text-gray-600">Thành viên từ: <span class="text-gray-800">03/2024</span></p>
+        <p class="text-gray-600">Thành viên từ: <span class="text-gray-800">03/2024</span></p> -->
 
         <p class="text-green-600 font-semibold mt-2 inline-block bg-green-100 px-3 py-1 rounded-full text-sm">
           Tài khoản đang hoạt động
@@ -168,14 +203,61 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
         <p class="text-3xl font-bold text-blue-600 mt-2"><?= number_format($total_balance, 0) ?> đ</p>
       </div>
 
-      <div class="bg-green-50 p-6 rounded-xl shadow">
-        <h3 class="text-gray-700 text-lg font-medium">🎯 Mục tiêu tiết kiệm</h3>
-        <p class="text-xl text-green-600 mt-2">50.000.000 đ</p>
-        <div class="w-full bg-gray-200 rounded-full h-4 mt-3">
-          <div class="bg-green-500 h-4 rounded-full" style="width: 47%"></div>
+      <div class="bg-emerald-50 p-6 rounded-xl shadow card">
+  <h3 class="text-gray-700 text-lg font-medium flex items-center gap-2">
+    🎯 Mục tiêu tiết kiệm
+  </h3>
+
+  <?php if ($total_goals > 0): ?>
+    <div class="mt-3 space-y-2 text-sm text-gray-700">
+      <p>• Số mục tiêu: 
+        <span class="font-semibold"><?= $total_goals ?></span>
+      </p>
+
+      <p>• Tổng đã tiết kiệm: 
+        <span class="font-semibold text-emerald-600">
+          <?= number_format($total_saved, 0) ?> đ
+        </span>
+      </p>
+
+      <div>
+        <p class="mb-1">
+          • Tiến độ chung:
+          <span class="font-semibold">
+            <?= round($avg_progress, 1) ?>%
+          </span>
+        </p>
+
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div 
+            class="h-3 rounded-full transition-all duration-700
+            <?= $avg_progress < 50 ? 'bg-yellow-400' : ($avg_progress < 80 ? 'bg-blue-500' : 'bg-emerald-500') ?>"
+            style="width: <?= min(100, $avg_progress) ?>%">
+          </div>
         </div>
-        <p class="text-sm text-gray-500 mt-1">Đã đạt: 47%</p>
       </div>
+
+      <?php if ($top_goal): ?>
+        <p class="text-xs text-gray-500 mt-2">
+          ⭐ Gần hoàn thành nhất: 
+          <span class="font-medium text-gray-700">
+            <?= htmlspecialchars($top_goal['goal_name']) ?>
+          </span>
+        </p>
+      <?php endif; ?>
+    </div>
+
+  <?php else: ?>
+    <p class="text-sm text-gray-500 mt-3">
+      ⚠️ Bạn chưa tạo mục tiêu tiết kiệm.
+      <a href="../Goals/Goals.php" class="text-blue-600 hover:underline font-medium">
+        Tạo ngay
+      </a>
+    </p>
+  <?php endif; ?>
+</div>
+
+
     </div>
 
     <!-- Tổng quan -->
@@ -200,7 +282,9 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
         </li>
       </ul>
     </div>
-
+    <?php
+      Notification_Notyf('edit', null, 'Chức năng chỉnh sửa hồ sơ đang được bảo trì. Vui lòng thử lại sau!');
+    ?>
   </div>
 </body>
 
