@@ -248,20 +248,9 @@ while ($row = $tags_result->fetch_assoc()) {
       <input type="range" min="1" max="5" name="emotion_level" class="w-full">
     </div> -->
 
-    <div class="mb-6" id="tags-section">
-      <label class="block font-medium mb-1">Tags</label>
-      <input type="text" name="tags" id="tags" class="w-full border p-2 rounded" list="tags-list"
-        value="<?= htmlspecialchars($_POST['tags'] ?? '') ?>"
-        <?= (($_POST['type'] ?? 'expense') === 'income') ? '' : 'required' ?>
-        oninvalid="this.setCustomValidity('Vui lòng chọn Tags.')"
-        oninput="this.setCustomValidity('')">
-
-      <datalist id="tags-list">
-        <?php foreach ($tags_suggest as $tag): ?>
-          <option value="<?= htmlspecialchars($tag) ?>">
-        <?php endforeach; ?>
-      </datalist>
-    </div>
+    <select name="tags" id="tag" class="w-full border p-2 mb-4 rounded">
+    <option value="">-- Chọn tag --</option>
+  </select>
 
 
       <div class="flex gap-4 justify-end">
@@ -286,27 +275,7 @@ while ($row = $tags_result->fetch_assoc()) {
 </body>
 </html>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const walletSelect = document.getElementById("wallet_id");
-  const datalist = document.getElementById("tags-list");
 
-  walletSelect.addEventListener("change", function () {
-    const walletId = walletSelect.value;
-    fetch(`get_tags_by_wallet.php?wallet_id=${walletId}`)
-      .then(response => response.json())
-      .then(tags => {
-        datalist.innerHTML = ""; // Clear old options
-        tags.forEach(tag => {
-          const option = document.createElement("option");
-          option.value = tag;
-          datalist.appendChild(option);
-        });
-      })
-      .catch(error => console.error("Lỗi khi load tag:", error));
-  });
-});
-</script>
 <script>
                 function checkAmount(input) {
                  if (parseFloat(input.value) < 0) {
@@ -317,43 +286,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
  </script>
 
- <script>
+<script>
 document.addEventListener("DOMContentLoaded", function () {
   const walletSelect = document.getElementById("wallet_id");
-  const datalist = document.getElementById("tags-list");
-  const typeSelect = document.getElementById("type");
-  const tagsInput = document.getElementById("tags");
+  const tagSelect = document.getElementById("tag");
 
-  // Cập nhật tag gợi ý theo ví
   walletSelect.addEventListener("change", function () {
-    const walletId = walletSelect.value;
+    const walletId = this.value;
+
+    tagSelect.innerHTML = '<option value="">-- Chọn tag --</option>';
+
+    if (!walletId) return;
+
     fetch(`get_tags_by_wallet.php?wallet_id=${walletId}`)
-      .then(response => response.json())
+      .then(res => res.json())
       .then(tags => {
-        datalist.innerHTML = ""; // Clear old options
         tags.forEach(tag => {
           const option = document.createElement("option");
           option.value = tag;
-          datalist.appendChild(option);
+          option.textContent = tag;
+          tagSelect.appendChild(option);
         });
       })
-      .catch(error => console.error("Lỗi khi load tag:", error));
+      .catch(err => console.error("Lỗi load tag:", err));
   });
-
-  // Xử lý bật/tắt required cho tags
-  function toggleTagsRequired() {
-  if (typeSelect.value === "income") {
-    tagsInput.required = false;
-    tagsInput.setCustomValidity("");
-    document.getElementById("tags-section").classList.add("hidden");
-  } else {
-    tagsInput.required = true;
-    document.getElementById("tags-section").classList.remove("hidden");
-  }
-}
-
-  typeSelect.addEventListener("change", toggleTagsRequired);
-  toggleTagsRequired(); // Gọi lần đầu để set theo mặc định
 });
-
 </script>
