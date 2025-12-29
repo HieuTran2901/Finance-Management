@@ -2,6 +2,7 @@
 
 $data = include 'group_detail_controller.php';
 extract($data);
+include "../../Sidebar/Sidebar.php";
 
 $sql_user = $conn->prepare("SELECT username, is_placeholder FROM users WHERE id = ?");
 $sql_user->bind_param("i", $user_id);
@@ -157,41 +158,10 @@ $is_fake_user = isset($users['is_placeholder']) && $users['is_placeholder'] == 1
             if (!$is_fake_user): ?>
 
             <!-- Danh sách menu -->
-            <nav class="space-y-2">
-                <div class="flex items-center gap-3 mb-8">
-                <div class="w-10 h-10 bg-green-500 text-white flex items-center justify-center rounded-full font-bold text-sm">
-                    <?= strtoupper(substr($users['username'], 0, 1)) ?>
-                </div>
-                <div class="leading-4">
-                    <p class="text-gray-800 font-semibold"><?= htmlspecialchars($users['username']) ?></p>
-                    <p class="text-gray-500 text-sm">Tài khoản cá nhân</p>
-                </div>
-                </div>
-              <a href="../../../index.php" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                <i class="fa-solid fa-house text-indigo-500 group-hover:text-indigo-600"></i>
-                <span class="font-medium">Dashboard</span>
-              </a>
-              <a href="../../Wallet/Wallet.php" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                <i class="fa-solid fa-wallet text-indigo-500 group-hover:text-indigo-600"></i>
-                <span class="font-medium">Wallet</span>
-              </a>
-              <a href="../../Transction/Transaction.php" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                <i class="fa-solid fa-arrow-right-arrow-left text-indigo-500 group-hover:text-indigo-600"></i>
-                <span class="font-medium">Transaction</span>
-              </a>
-              <a href="../group.php" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 bg-indigo-50 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                <i class="fa-solid fa-users text-indigo-500 group-hover:text-indigo-600"></i>
-                <span class="font-medium">Group</span>
-              </a>
-              <a href="#" class="js-coming-soon flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                    <i class=" fa-solid fa-chart-pie text-indigo-500 group-hover:text-indigo-600"></i>
-                    <span class="font-medium">Report</span>
-                </a>
-                <a href="#" class="js-coming-soon flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition group">
-                    <i class="fa-solid fa-bullseye text-indigo-500 group-hover:text-indigo-600"></i>
-                    <span class="font-medium">Budget</span>
-                </a>
-            </nav>
+            <?php
+                $current_page = $_SERVER['PHP_SELF'];
+                renderSidebar($users, $current_page, "../../../pages","../../../index.php","../../logout.php");
+            ?>
             <?php endif; ?>
           </div>
 

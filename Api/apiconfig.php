@@ -18,4 +18,5 @@
     $apiKey = $_ENV['OPENROUTER_API_KEY']; // API key của openrouter
     $referer = $_ENV['URL_REFERER'];
     $modal_AI = $_ENV['MODAL_AI'] ?? 'meta-llama/llama-3.3-70b-instruct'; // Mô hình AI mặc định
+    $modal_AI_FREE = $_ENV['MODAL_AI_PRE'] ?? 'meta-llama/llama-3.3-70b-instruct:free'; // Mô hình AI phiên bản miễn phí
 ?>

@@ -76,7 +76,7 @@ Hãy đưa ra kế hoạch chi tiêu và phân bổ hợp lý để đạt đư�
 // 🔹 GỌI API OPENROUTER
 // ==========================
 $payload = [
-    "model" => $modal_AI,
+    "model" => $modal_AI_FREE,
     "messages" => [["role" => "user", "content" => $prompt]],
     "max_tokens" => 1000,
     "temperature" => 0.8

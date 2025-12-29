@@ -20,7 +20,7 @@ $userInput = trim($_POST['message']);
 
 // Gửi yêu cầu đến AI
 $data = [
-    "model" => $modal_AI,
+    "model" => $modal_AI_FREE,
     "temperature" => 0.7,
     "max_tokens" => 3000,
     "messages" => [
