@@ -4,221 +4,189 @@ const chatImage = document.getElementById("chatImage");
 const chatMessages = document.getElementById("chatMessages");
 const newMsgAlert = document.getElementById("newMessageAlert");
 
+let lastMessageId = 0;
 let isAtBottom = true;
 let newMessageCount = 0;
-let lastMessageId = null;
-let isEditingMessage = false; // 🔥 flag để tránh reload khi đang sửa
+let isEditingMessage = false;
 
+/* ======================
+   TẠO MESSAGE ELEMENT
+====================== */
+function createMessageElement(msg) {
+  const wrapper = document.createElement("div");
+  wrapper.className = `chat-message ${
+    msg.sender_id == USER_ID ? "me" : "other"
+  }`;
+  wrapper.dataset.id = msg.id;
+
+  let html = `
+    <div class="chat-username">${msg.username}</div>
+    <div class="chat-text">${msg.message}</div>
+  `;
+
+  if (msg.image) {
+    html += `
+      <img src="/pages/Group/message/uploads/${msg.image}"
+           class="chat-image"
+           onclick="window.open(this.src)">
+    `;
+  }
+
+  html += `<div class="chat-time">${msg.sent_at}</div>`;
+
+  if (msg.sender_id == USER_ID) {
+    html += `
+      <div class="chat-actions">
+        <button class="edit-btn text-gray-700" data-id="${msg.id}">Sửa</button>
+        <button class="delete-btn text-gray-700" data-id="${msg.id}">Thu hồi</button>
+      </div>
+    `;
+  }
+
+  wrapper.innerHTML = html;
+
+  // ✨ animate CHỈ tin mới
+  wrapper.classList.add("new-msg");
+  setTimeout(() => wrapper.classList.remove("new-msg"), 300);
+
+  return wrapper;
+}
+
+/* ======================
+   LOAD TIN NHẮN MỚI
+====================== */
 function loadMessages() {
-  fetch(`../message/get_messages.php?group_id=${GROUP_ID}`)
-    .then(res => res.json())
-    .then(data => {
-      chatMessages.innerHTML = '';
-      data.forEach(msg => {
-        const div = document.createElement('div');
-        div.classList.add('bg-white', 'p-2', 'rounded', 'shadow-sm', 'relative');
+  if (isEditingMessage) return;
 
-        let content = `
-          <strong>${msg.username}</strong>: 
-          <span class="chat-msg" data-id="${msg.id}">${msg.message}</span><br>
-          <small class="text-gray-400">${msg.sent_at}</small>
-        `;
+  fetch(
+    `../message/get_messages.php?group_id=${GROUP_ID}&after_id=${lastMessageId}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.length) return;
 
-        if (msg.image) {
-          const imagePath = `/pages/Group/message/uploads/${msg.image}`;
-          content += `
-            <div class="mt-2">
-              <a href="${imagePath}" target="_blank">
-                <img src="${imagePath}" class="w-20 h-20 object-cover rounded shadow cursor-pointer hover:opacity-80 transition" />
-              </a>
-            </div>
-          `;
+      let lastIdBefore = lastMessageId;
+      let hasNew = false;
+
+      data.forEach((msg) => {
+        if (document.querySelector(`.chat-message[data-id="${msg.id}"]`))
+          return;
+
+        const el = createMessageElement(msg);
+
+        if (msg.id > lastIdBefore) {
+          el.classList.add("new-msg");
+          hasNew = true;
         }
 
-        if (msg.sender_id == USER_ID) {
-          content += `
-            <div class="absolute right-2 top-2 space-x-2 text-sm">
-              <button class="text-blue-500 edit-btn" data-id="${msg.id}" data-msg="${msg.message}" data-image="${msg.image || ''}">Sửa</button>
-              <button class="text-red-500 delete-btn" data-id="${msg.id}">Thu hồi</button>
-            </div>`;
-        }
-
-        div.innerHTML = content;
-        chatMessages.appendChild(div);
+        chatMessages.appendChild(el);
+        lastMessageId = msg.id;
       });
 
-      if (data.length > 0) {
-        const newestId = data[data.length - 1].id;
-        const newestMsg = data[data.length - 1];
-        const isChatVisible = !chatBox.classList.contains("scale-0");
-
-        if (lastMessageId !== null && newestId !== lastMessageId && newestMsg.sender_id != USER_ID && !isChatVisible) {
-          newMessageCount++;
-          newMsgAlert.classList.remove('hidden');
-          newMsgAlert.textContent = `📩 Có ${newMessageCount} tin nhắn mới – nhấn để xem`;
-
-          const icon = document.getElementById('chatIcon');
-          if (icon) icon.src = './img/chat-warning.png';
-
-          toggleBtn.classList.remove('bg-indigo-600');
-          toggleBtn.classList.add('bg-red-600', 'ring-4', 'ring-red-500', 'animate-pulse');
-        }
-
-        lastMessageId = newestId;
-      } else {
-        lastMessageId = null;
-      }
-
-      if (isAtBottom) {
+      if (hasNew && isAtBottom) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
     });
 }
 
-// Tự động tải lại (trừ khi đang sửa)
-setInterval(() => {
-  if (!isEditingMessage) loadMessages();
-}, 2000);
+/* ======================
+   AUTO LOAD
+====================== */
+setInterval(loadMessages, 2000);
 loadMessages();
 
-// Gửi tin mới
-chatForm.addEventListener("submit", function (e) {
+/* ======================
+   GỬI TIN
+====================== */
+chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const message = chatInput.value.trim();
+  const text = chatInput.value.trim();
   const image = chatImage.files[0];
-  if (!message && !image) return;
+  if (!text && !image) return;
 
-  const formData = new FormData();
-  formData.append("group_id", GROUP_ID);
-  formData.append("message", message);
-  if (image) formData.append("image", image);
+  const fd = new FormData();
+  fd.append("group_id", GROUP_ID);
+  fd.append("message", text);
+  if (image) fd.append("image", image);
 
   fetch("../message/send_message.php", {
     method: "POST",
-    body: formData
-  })
-    .then(res => res.text())
-    .then(response => {
-      if (response === "OK") {
-        chatInput.value = "";
-        chatImage.value = "";
-        loadMessages();
-      } else {
-        alert("❌ Gửi thất bại: " + response);
-      }
-    })
-    .catch(err => {
-      console.error("Lỗi gửi tin:", err);
-      alert("❌ Có lỗi khi gửi");
-    });
+    body: fd,
+  }).then(() => {
+    chatInput.value = "";
+    chatImage.value = "";
+    loadMessages();
+  });
 });
 
-// Scroll
-chatMessages.addEventListener('scroll', () => {
-  const scrollBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight;
-  isAtBottom = scrollBottom <= 20;
+/* ======================
+   SCROLL
+====================== */
+chatMessages.addEventListener("scroll", () => {
+  const bottom =
+    chatMessages.scrollHeight -
+    chatMessages.scrollTop -
+    chatMessages.clientHeight;
+  isAtBottom = bottom < 20;
+
   if (isAtBottom) {
-    newMsgAlert.classList.add('hidden');
+    newMsgAlert.classList.add("hidden");
     newMessageCount = 0;
   }
 });
 
-newMsgAlert.addEventListener('click', () => {
+newMsgAlert.addEventListener("click", () => {
   chatMessages.scrollTop = chatMessages.scrollHeight;
-  newMsgAlert.classList.add('hidden');
+  newMsgAlert.classList.add("hidden");
   newMessageCount = 0;
 });
 
-// Xử lý sửa / xoá
-chatMessages.addEventListener("click", function (e) {
+/* ======================
+   XOÁ & SỬA
+====================== */
+chatMessages.addEventListener("click", (e) => {
+  /* XOÁ */
   if (e.target.classList.contains("delete-btn")) {
-    const msgId = e.target.dataset.id;
-    if (confirm("Bạn chắc chắn muốn thu hồi tin nhắn này?")) {
-      fetch("../message/delete_message.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `id=${msgId}`
-      })
-        .then(res => res.text())
-        .then(response => {
-          if (response === "OK") {
-            loadMessages();
-          } else {
-            alert("❌ Không thể xóa tin nhắn: " + response);
-          }
-        });
-    }
+    const id = e.target.dataset.id;
+    if (!confirm("Thu hồi tin nhắn?")) return;
+
+    fetch("../message/delete_message.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `id=${id}`,
+    }).then(() => {
+      const el = document.querySelector(`.chat-message[data-id="${id}"]`);
+      if (el) el.remove();
+    });
   }
 
-  // ✅ Inline edit
+  /* SỬA */
   if (e.target.classList.contains("edit-btn")) {
-    const msgId = e.target.dataset.id;
-    const msgSpan = document.querySelector(`.chat-msg[data-id="${msgId}"]`);
-    const parentDiv = msgSpan.closest('div');
-    const oldText = msgSpan.textContent;
-
-    e.target.style.display = 'none';
-    isEditingMessage = true; // 🔒 Ngăn auto reload
+    isEditingMessage = true;
+    const id = e.target.dataset.id;
+    const box = document.querySelector(`.chat-message[data-id="${id}"]`);
+    const textEl = box.querySelector(".chat-text");
+    const old = textEl.textContent;
 
     const input = document.createElement("input");
-    input.type = "text";
-    input.value = oldText;
-    input.className = "border rounded px-2 py-1 text-sm w-full mt-1";
+    input.value = old;
+    input.className = "w-full border text-gray-700 rounded px-2 py-1 text-sm";
 
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") e.preventDefault(); // 🔒 Ngăn Enter submit form
-    });
+    textEl.replaceWith(input);
+    input.focus();
 
-    const imageInput = document.createElement("input");
-    imageInput.type = "file";
-    imageInput.accept = "image/*";
-    imageInput.className = "block mt-2";
-
-    const saveBtn = document.createElement("button");
-    saveBtn.textContent = "Lưu";
-    saveBtn.className = "bg-blue-500 text-white px-2 py-1 rounded text-sm mr-2 mt-2";
-
-    const cancelBtn = document.createElement("button");
-    cancelBtn.textContent = "Huỷ";
-    cancelBtn.className = "bg-gray-400 text-white px-2 py-1 rounded text-sm mt-2";
-
-    msgSpan.replaceWith(input);
-    parentDiv.appendChild(imageInput);
-    parentDiv.appendChild(saveBtn);
-    parentDiv.appendChild(cancelBtn);
-
-    cancelBtn.onclick = () => {
-      input.replaceWith(msgSpan);
-      imageInput.remove();
-      saveBtn.remove();
-      cancelBtn.remove();
-      e.target.style.display = 'inline';
-      isEditingMessage = false; // 🔓 Cho phép reload lại
-    };
-
-    saveBtn.onclick = () => {
-      const newText = input.value.trim();
-      const imageFile = imageInput.files[0];
-
-      const formData = new FormData();
-      formData.append("id", msgId);
-      formData.append("message", newText);
-      if (imageFile) formData.append("image", imageFile);
-
-      fetch("../message/edit_message.php", {
-        method: "POST",
-        body: formData
-      })
-        .then(res => res.text())
-        .then(response => {
-          if (response === "OK") {
-            isEditingMessage = false;
-            loadMessages();
-          } else {
-            alert("❌ Không thể sửa tin nhắn: " + response);
-          }
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") {
+        fetch("../message/edit_message.php", {
+          method: "POST",
+          body: new URLSearchParams({ id, message: input.value }),
+        }).then(() => {
+          textEl.textContent = input.value;
+          input.replaceWith(textEl);
+          isEditingMessage = false;
         });
-    };
+      }
+    });
   }
 });

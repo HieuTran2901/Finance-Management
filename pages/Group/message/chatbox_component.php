@@ -111,3 +111,105 @@
 </script>
 <script type="module" src="../confis/Chatbox.js"></script>
 
+<style>
+  /* ====== MESSAGE WRAPPER ====== */
+.new-msg {
+  animation: fadeInUp 0.25s ease;
+}
+.chat-message {
+  position: relative;
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* ====== USER MESSAGE (ME) ====== */
+.chat-message.me {
+  position: relative;
+  left: 80px;
+  align-self: flex-end;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 6px 16px rgba(99,102,241,0.3);
+}
+
+/* ====== OTHER MESSAGE ====== */
+.chat-message.other {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #111827;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+/* ====== USERNAME ====== */
+.chat-username {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+/* ====== TIME ====== */
+.chat-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* ====== IMAGE ====== */
+.chat-image {
+  margin-top: 6px;
+  border-radius: 10px;
+  max-width: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.chat-image:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* ====== ACTION BUTTONS ====== */
+.chat-actions {
+  position: absolute;
+  top: -8px;
+  right: 6px;
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.chat-actions button {
+  background: rgba(255,255,255,0.85);
+  padding: 2px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-actions button:hover {
+  background: #e5e7eb;
+}
+
+/* ====== ANIMATION ====== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+</style>
