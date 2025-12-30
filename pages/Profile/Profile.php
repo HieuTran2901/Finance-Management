@@ -4,8 +4,8 @@ require_once '../../module/config.php';
 
 // Nếu chưa đăng nhập → chuyển về login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../dangkydangnhap/login.php");
-    exit();
+  header("Location: ../../dangkydangnhap/login.php");
+  exit();
 }
 include '../../Func/Notification.php';
 
@@ -33,15 +33,16 @@ $previous_month = date('m', $previous_time);
 $previous_year = date('Y', $previous_time);
 
 // ====================== HÀM TÍNH TỔNG ======================
-function get_total_by_type($conn, $user_id, $type, $month, $year) {
-    $sql = $conn->prepare("
+function get_total_by_type($conn, $user_id, $type, $month, $year)
+{
+  $sql = $conn->prepare("
         SELECT SUM(amount) AS total
         FROM transactions 
         WHERE user_id = ? AND type = ? AND MONTH(date) = ? AND YEAR(date) = ?
     ");
-    $sql->bind_param("ssii", $user_id, $type, $month, $year);
-    $sql->execute();
-    return $sql->get_result()->fetch_assoc()['total'] ?? 0;
+  $sql->bind_param("ssii", $user_id, $type, $month, $year);
+  $sql->execute();
+  return $sql->get_result()->fetch_assoc()['total'] ?? 0;
 }
 
 $current_expense = get_total_by_type($conn, $user_id, "expense", $current_month, $current_year);
@@ -93,8 +94,8 @@ $total_saved   = $goals_summary['total_saved'] ?? 0;
 $total_target  = $goals_summary['total_target'] ?? 0;
 
 $avg_progress = ($total_target > 0)
-    ? ($total_saved / $total_target) * 100
-    : 0;
+  ? ($total_saved / $total_target) * 100
+  : 0;
 
 // Lấy mục tiêu gần hoàn thành nhất
 $sql_top_goal = $conn->prepare("
@@ -114,40 +115,54 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ sơ cá nhân</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ cá nhân</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- CSS UI -->
-    <style>
-        body {
-            background: linear-gradient(135deg, #eef2ff, #f8fafc);
-        }
-        .avatar-box {
-            transition: 0.25s ease;
-        }
-        .avatar-box:hover {
-            transform: scale(1.08);
-            box-shadow: 0 10px 25px rgba(59,130,246,0.35);
-        }
-        .card {
-            transition: 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-        }
-        .fade-in {
-            animation: fadeIn 0.8s ease both;
-        }
-        @keyframes fadeIn {
-            from { opacity:0; transform: translateY(10px); }
-            to   { opacity:1; transform: translateY(0px); }
-        }
-    </style>
+  <!-- CSS UI -->
+  <style>
+    body {
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    }
+
+    .avatar-box {
+      transition: 0.25s ease;
+    }
+
+    .avatar-box:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+    }
+
+    .card {
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -175,10 +190,16 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
     <!-- Thông tin người dùng: Avatar + Info nằm bên trái -->
     <div class="flex flex-col sm:flex-row items-start gap-6">
 
-      <!-- Avatar -->
-      <div class="w-32 h-32 rounded-full ring-4 ring-blue-300 shadow-md flex items-center justify-center bg-blue-100 text-3xl font-bold">
-        <?= strtoupper(substr($users['username'], 0, 1)) ?>
+      <div class="relative w-32 h-32 group">
+        <!-- Ring Gradient -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-spin-slow opacity-70 group-hover:opacity-100"></div>
+
+        <!-- Avatar chính -->
+        <div class="absolute inset-1 rounded-full bg-blue-500 flex items-center justify-center text-white text-4xl font-bold transition-transform duration-300 transform group-hover:scale-105">
+          <?= strtoupper(substr($users['username'], 0, 1)) ?>
+        </div>
       </div>
+
 
       <!-- Info (Nằm bên trái luôn khi trên PC) -->
       <div>
@@ -204,58 +225,58 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
       </div>
 
       <div class="bg-emerald-50 p-6 rounded-xl shadow card">
-  <h3 class="text-gray-700 text-lg font-medium flex items-center gap-2">
-    🎯 Mục tiêu tiết kiệm
-  </h3>
+        <h3 class="text-gray-700 text-lg font-medium flex items-center gap-2">
+          🎯 Mục tiêu tiết kiệm
+        </h3>
 
-  <?php if ($total_goals > 0): ?>
-    <div class="mt-3 space-y-2 text-sm text-gray-700">
-      <p>• Số mục tiêu: 
-        <span class="font-semibold"><?= $total_goals ?></span>
-      </p>
+        <?php if ($total_goals > 0): ?>
+          <div class="mt-3 space-y-2 text-sm text-gray-700">
+            <p>• Số mục tiêu:
+              <span class="font-semibold"><?= $total_goals ?></span>
+            </p>
 
-      <p>• Tổng đã tiết kiệm: 
-        <span class="font-semibold text-emerald-600">
-          <?= number_format($total_saved, 0) ?> đ
-        </span>
-      </p>
+            <p>• Tổng đã tiết kiệm:
+              <span class="font-semibold text-emerald-600">
+                <?= number_format($total_saved, 0) ?> đ
+              </span>
+            </p>
 
-      <div>
-        <p class="mb-1">
-          • Tiến độ chung:
-          <span class="font-semibold">
-            <?= round($avg_progress, 1) ?>%
-          </span>
-        </p>
+            <div>
+              <p class="mb-1">
+                • Tiến độ chung:
+                <span class="font-semibold">
+                  <?= round($avg_progress, 1) ?>%
+                </span>
+              </p>
 
-        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-          <div 
-            class="h-3 rounded-full transition-all duration-700
+              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  class="h-3 rounded-full transition-all duration-700
             <?= $avg_progress < 50 ? 'bg-yellow-400' : ($avg_progress < 80 ? 'bg-blue-500' : 'bg-emerald-500') ?>"
-            style="width: <?= min(100, $avg_progress) ?>%">
+                  style="width: <?= min(100, $avg_progress) ?>%">
+                </div>
+              </div>
+            </div>
+
+            <?php if ($top_goal): ?>
+              <p class="text-xs text-gray-500 mt-2">
+                ⭐ Gần hoàn thành nhất:
+                <span class="font-medium text-gray-700">
+                  <?= htmlspecialchars($top_goal['goal_name']) ?>
+                </span>
+              </p>
+            <?php endif; ?>
           </div>
-        </div>
+
+        <?php else: ?>
+          <p class="text-sm text-gray-500 mt-3">
+            ⚠️ Bạn chưa tạo mục tiêu tiết kiệm.
+            <a href="../Goals/Goals.php" class="text-blue-600 hover:underline font-medium">
+              Tạo ngay
+            </a>
+          </p>
+        <?php endif; ?>
       </div>
-
-      <?php if ($top_goal): ?>
-        <p class="text-xs text-gray-500 mt-2">
-          ⭐ Gần hoàn thành nhất: 
-          <span class="font-medium text-gray-700">
-            <?= htmlspecialchars($top_goal['goal_name']) ?>
-          </span>
-        </p>
-      <?php endif; ?>
-    </div>
-
-  <?php else: ?>
-    <p class="text-sm text-gray-500 mt-3">
-      ⚠️ Bạn chưa tạo mục tiêu tiết kiệm.
-      <a href="../Goals/Goals.php" class="text-blue-600 hover:underline font-medium">
-        Tạo ngay
-      </a>
-    </p>
-  <?php endif; ?>
-</div>
 
 
     </div>
@@ -268,14 +289,14 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
         <li>• Tổng thu nhập tháng này: <span class="font-bold text-green-600"><?= number_format($current_income, 0) ?> đ</span></li>
         <li>• Tổng chi tiêu tháng này: <span class="font-bold text-red-500"><?= number_format($current_expense, 0) ?> đ</span></li>
 
-        <?php 
-            $wallet_names = array_map(fn($w) => $w['name'], $main_wallets);
-            $wallet_string = implode(', ', $wallet_names);
+        <?php
+        $wallet_names = array_map(fn($w) => $w['name'], $main_wallets);
+        $wallet_string = implode(', ', $wallet_names);
         ?>
 
         <li>• Ví đang sử dụng: <span class="font-semibold"><?= htmlspecialchars($wallet_string) ?></span></li>
 
-        <li>• Danh mục chi tiêu lớn nhất: 
+        <li>• Danh mục chi tiêu lớn nhất:
           <span class="text-indigo-600 font-medium">
             <?= htmlspecialchars($biggest_category_name) ?> - <?= number_format($biggest_category_amount, 0) ?> đ
           </span>
@@ -283,7 +304,7 @@ $wallet_string = implode(", ", array_column($main_wallets, "name"));
       </ul>
     </div>
     <?php
-      Notification_Notyf('edit', null, 'Chức năng chỉnh sửa hồ sơ đang được bảo trì. Vui lòng thử lại sau!');
+    Notification_Notyf('edit', null, 'Chức năng chỉnh sửa hồ sơ đang được bảo trì. Vui lòng thử lại sau!');
     ?>
   </div>
 </body>

@@ -79,167 +79,195 @@ $stmt->close();
 
 // Tính số thành viên cho mỗi group
 foreach ($data as &$group) {
-    $group_id = $group['id'];
-    $member_count_stmt = $conn->prepare("SELECT COUNT(user_id) AS member_count FROM Group_Members WHERE group_id = ?");
-    $member_count_stmt->bind_param("i", $group_id);
-    $member_count_stmt->execute();
-    $member_result = $member_count_stmt->get_result();
-    $member_data = $member_result->fetch_assoc();
-    $group['member_count'] = $member_data['member_count'] ?? 0;
-    $member_count_stmt->close();
+  $group_id = $group['id'];
+  $member_count_stmt = $conn->prepare("SELECT COUNT(user_id) AS member_count FROM Group_Members WHERE group_id = ?");
+  $member_count_stmt->bind_param("i", $group_id);
+  $member_count_stmt->execute();
+  $member_result = $member_count_stmt->get_result();
+  $member_data = $member_result->fetch_assoc();
+  $group['member_count'] = $member_data['member_count'] ?? 0;
+  $member_count_stmt->close();
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Group</title>
   <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/fadein.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .scrollbar-thin {
-            scrollbar-width: thin;
-            scrollbar-color: #d1d5db #f3f4f6; /* thumb and track color */
-        }
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 8px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: #f3f4f6; /* track color */
-            border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background-color: #d1d5db; /* thumb color */
-            border-radius: 10px;
-            border: 2px solid #f3f4f6; /* creates padding around thumb */
-        }
-        /* Custom waving hand animation */
-        @keyframes waving-hand {
-            0% { transform: rotate(0deg); }
-            15% { transform: rotate(14deg); }
-            30% { transform: rotate(-8deg); }
-            45% { transform: rotate(14deg); }
-            60% { transform: rotate(-4deg); }
-            75% { transform: rotate(10deg); }
-            100% { transform: rotate(0deg); }
-        }
-        .animate-waving-hand {
-            animation: waving-hand 2.5s infinite;
-            transform-origin: 70% 70%;
-            display: inline-block;
-        }
-    </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/fadein.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .scrollbar-thin {
+      scrollbar-width: thin;
+      scrollbar-color: #d1d5db #f3f4f6;
+      /* thumb and track color */
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      /* track color */
+      border-radius: 10px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #d1d5db;
+      /* thumb color */
+      border-radius: 10px;
+      border: 2px solid #f3f4f6;
+      /* creates padding around thumb */
+    }
+
+    /* Custom waving hand animation */
+    @keyframes waving-hand {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      15% {
+        transform: rotate(14deg);
+      }
+
+      30% {
+        transform: rotate(-8deg);
+      }
+
+      45% {
+        transform: rotate(14deg);
+      }
+
+      60% {
+        transform: rotate(-4deg);
+      }
+
+      75% {
+        transform: rotate(10deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    .animate-waving-hand {
+      animation: waving-hand 2.5s infinite;
+      transform-origin: 70% 70%;
+      display: inline-block;
+    }
+  </style>
 </head>
 <!-- thông báo -->
-<div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center relative animate-fade-in">
-    <h2 class="text-2xl font-semibold text-indigo-700 mb-3">Thông báo</h2>
-    <p class="text-gray-700 mb-6">Tính năng này đang được phát triển. Vui lòng quay lại sau!</p>
-    <button id="closeModal" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">Đóng</button>
-  </div>
-</div>
+<?php include '../comming_soon_modal.php'; ?>
+
 <body class="bg-gray-100 font-sans">
   <div class="flex min-h-screen pl-64">
     <!-- Sidebar -->
-     <?php
-      $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
-       renderSidebar(
-        $users,
-        $currentPage,
-        "../../pages",
-        "../../index.php",
-        "../../pages/logout.php"
-      );
+    <?php
+    $currentPage = $_SERVER['PHP_SELF']; // Lấy đường dẫn file hiện tại
+    renderSidebar(
+      $users,
+      $currentPage,
+      "../../pages",
+      "../../index.php",
+      "../../pages/logout.php"
+    );
     ?>
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <h2 class="text-xl font-bold mb-4">Tạo nhóm mới</h2>
-            <form method="POST" class="flex flex-col sm:flex-row gap-4 items-end">
-                <div class="w-full sm:flex-grow">
-                    <label for="group_name" class="block text-sm font-medium mb-1">Tên nhóm:</label>
-                    <input type="text" name="group_name" id="group_name" required placeholder="Nhập tên nhóm"
-                           class="w-full border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <button type="submit" name="create_group"
-                        class="bg-gradient-to-br from-emerald-900 via-green-700 to-teal-500
+        <h2 class="text-xl font-bold mb-4">Tạo nhóm mới</h2>
+        <form method="POST" class="flex flex-col sm:flex-row gap-4 items-end">
+          <div class="w-full sm:flex-grow">
+            <label for="group_name" class="block text-sm font-medium mb-1">Tên nhóm:</label>
+            <input type="text" name="group_name" id="group_name" required placeholder="Nhập tên nhóm"
+              class="w-full border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+          </div>
+          <button type="submit" name="create_group"
+            class="bg-gradient-to-br from-emerald-900 via-green-700 to-teal-500
                         text-white px-6 py-2.5 rounded-lg shadow-lg
                         hover:shadow-xl hover:scale-105
-                        transition-all duration-300 font-semibold"><i ></i> Tạo nhóm
-                </button>
-            </form>
-            <?= $create_message ?>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Danh sách nhóm của bạn</h2>
-                <?php if (empty($data)): ?>
-                    <div class="text-center py-8 text-gray-500">
-                        <p class="mb-4 text-lg">Bạn chưa tham gia hoặc tạo nhóm chia sẻ nào.</p>
-                        <p>Hãy tạo một nhóm mới để quản lý tài chính cùng bạn bè hoặc gia đình!</p>
-                    </div>
-                <?php else: ?>
-          <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"></div>
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-4 py-2 border text-center">STT</th>
-                  <th class="px-4 py-2 border text-center">Tên Group</th>
-                  <th class="px-4 py-2 border text-center">Tổng tiền</th>
-                  <th class="px-4 py-2 border text-center">Thành viên</th>
-                  <th class="px-4 py-2 border text-center">Tạo bởi</th>
-                  <th class="px-4 py-2 border text-center">Ngày tạo</th>
-                </tr>
-              </thead>
-
-              <tbody class="bg-white divide-y divide-gray-200">
-                    <?php foreach ($data as $index => $group): ?>
-                        <tr class="hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
-                                        <?= htmlspecialchars($group['name']) ?>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
-                                        <?= number_format($group['total_amount'], 0, ',', '.') ?>₫
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <i class="fa-solid fa-users-line text-blue-500 mr-1"></i> <?= $group['member_count'] ?>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <?= htmlspecialchars($group['creator_name']) ?>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= date('d/m/Y', strtotime($group['created_at'])) ?>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="group_detail/group_detail.php?id=<?= $group['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-200 shadow-sm">
-                                            Chi tiết <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
-                                        </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-          </div>
-          <?php endif; ?>
-        </div>
+                        transition-all duration-300 font-semibold"><i></i> Tạo nhóm
+          </button>
+        </form>
+        <?= $create_message ?>
       </div>
-    </main>
-   </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Danh sách nhóm của bạn</h2>
+        <?php if (empty($data)): ?>
+          <div class="text-center py-8 text-gray-500">
+            <p class="mb-4 text-lg">Bạn chưa tham gia hoặc tạo nhóm chia sẻ nào.</p>
+            <p>Hãy tạo một nhóm mới để quản lý tài chính cùng bạn bè hoặc gia đình!</p>
+          </div>
+        <?php else: ?>
+          <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm"></div>
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 border text-center">STT</th>
+                <th class="px-4 py-2 border text-center">Tên Group</th>
+                <th class="px-4 py-2 border text-center">Tổng tiền</th>
+                <th class="px-4 py-2 border text-center">Thành viên</th>
+                <th class="px-4 py-2 border text-center">Tạo bởi</th>
+                <th class="px-4 py-2 border text-center">Ngày tạo</th>
+              </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-200">
+              <?php foreach ($data as $index => $group): ?>
+                <tr class="hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
+                    <?= htmlspecialchars($group['name']) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">
+                    <?= number_format($group['total_amount'], 0, ',', '.') ?>₫
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <i class="fa-solid fa-users-line text-blue-500 mr-1"></i> <?= $group['member_count'] ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    <?= htmlspecialchars($group['creator_name']) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <?= date('d/m/Y', strtotime($group['created_at'])) ?>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href="group_detail/group_detail.php?id=<?= $group['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-200 shadow-sm">
+                      Chi tiết <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
+                    </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+      </div>
+    <?php endif; ?>
+  </div>
+  </div>
+  </main>
+  </div>
 </body>
 <!-- AOS Animation Library -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <!-- Khởi tạo AOS và Smooth Scroll -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     // Khởi tạo AOS
     AOS.init({
       once: true,
@@ -248,7 +276,7 @@ foreach ($data as &$group) {
 
     // Cuộn mượt cho các liên kết nội bộ
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function(e) {
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
           e.preventDefault();
@@ -262,4 +290,5 @@ foreach ($data as &$group) {
 </script>
 
 <script src="../../js/Modal.js"></script>
+
 </html>

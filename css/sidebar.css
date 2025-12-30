@@ -1,159 +1,179 @@
-body {
-    margin-left: 0px;
-}
-
+/* =========================
+   SIDEBAR CƠ BẢN – DỊU & HIỆN ĐẠI
+========================= */
 .custom-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 245px;
-    height: 100vh;
-    background: linear-gradient(to bottom, #d0ddf1, #dbe3f4, #c6d3fb);
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 10;
-    color: #f3f4f6;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 245px;
+  height: 100vh;
+  /* background: linear-gradient(180deg, #6b6ea8 0%, #8f93c8 100%); */
+  background: linear-gradient(to bottom, #d0ddf1, #dbe3f4, #c6d3fb);
+  color: #ffffff; /* Tăng lên trắng tinh cho contrast tốt hơn */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: "Inter", sans-serif;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  overflow-y: auto;
 }
 
-/* Khối trên */
 .sidebar-top {
-    padding: 18px;
-    margin-top: -20px;
+  padding: 18px;
 }
 
-/* Logo */
+/* =========================
+   LOGO
+========================= */
+
 .sidebar-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: -20px;
+  display: flex;
+  align-items: center;
+  margin-bottom: -20px;
 }
-
 .sidebar-logo img {
-    width: 250px;
-    height: auto;
-    object-fit: contain;
+  width: 250px;
+  height: auto;
+  object-fit: contain;
+  opacity: 1; /* Tăng opacity để logo nổi hơn */
 }
 
-/* User */
+/* =========================
+   USER INFO
+========================= */
 .sidebar-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
 }
-
 .sidebar-avatar {
-    width: 40px;
-    height: 40px;
-    background: #22c55e;
-    color: white;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
+  width: 40px;
+  height: 40px;
+  background: #22c55e;
+  color: white;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
 }
-
 .sidebar-user-info p:first-child {
-    font-weight: 600;
-    color: #1f2937;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .sidebar-user-info p:last-child {
-    font-size: 14px;
-    color: #6b7280;
+  font-size: 14px;
+  color: #6b7280;
 }
 
-/* Menu */
+/* =========================
+   MENU
+========================= */
 .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
 }
-
 .sidebar-menu a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 10px;
-    color: #374151;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.25s;
+  display: flex;
+  align-items: center;
+  padding: 13px 16px;
+  border-radius: 14px;
+  margin-bottom: 6px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .sidebar-menu a i {
-    color: #6366f1;
-    font-size: 16px;
+  margin-right: 14px;
+  font-size: 16px;
+  opacity: 1; /* Icon rõ nét hơn */
+  color: #6366f1;
+  font-size: 16px;
 }
 
+/* Hover – nổi bật hơn */
 .sidebar-menu a:hover {
-    background: #e0e7ff;
-    color: #4338ca;
+  background: #e0e7ff;
+  color: #4338ca;
+  transform: translateX(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Active – rõ ràng và dịu */
 .sidebar-menu a.active {
-    background: #c7d2fe;
-    color: #3730a3;
-    font-weight: bold;
+  background: #c7d2fe;
+  color: #3730a3;
+  font-weight: bold;
 }
 
-
-
-@keyframes santa-bounce {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    25% {
-        transform: translateY(-15px);
-    }
-
-    50% {
-        transform: translateY(0);
-    }
-
-    75% {
-        transform: translateY(-7px);
-    }
+/* Coming soon */
+.sidebar-menu a.js-coming-soon::after {
+  content: "Soon";
+  font-size: 10px;
+  color: #5a5d9a; /* Tím đậm hơn */
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin-left: auto;
+  font-weight: 700;
 }
 
-
-/* Logout */
+/* =========================
+   LOGOUT
+========================= */
+.sidebar-bottom {
+  padding: 18px;
+}
 .sidebar-logout {
-    display: flex;
-    justify-content: center;
-    /* căn giữa nội dung */
-    width: 100%;
-    /* chiếm toàn bộ chiều ngang */
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    font-weight: 600;
-    color: white;
-    background: linear-gradient(to bottom, #085524, #561c1c);
-    /* từ đậm (#16a34a) xuống nhạt (#22c55e) */
-    border: none;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 12px 15px;
+  border-radius: 14px;
+  background: linear-gradient(to bottom, #a5b4fc, #f88181);
+  color: white;
 
-.sidebar-logout:hover {
-    background: linear-gradient(to bottom, #2aef72, #fc3131);
-    /* đảo ngược gradient khi hover */
-    transform: translateY(-3px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .sidebar-logout i {
-    font-size: 16px;
+  margin-right: 10px;
+  opacity: 1;
+}
+
+/* Logout hover */
+.sidebar-logout:hover {
+  background: linear-gradient(to bottom, #2aef72, #fc3131);
+  /* đảo ngược gradient khi hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+.custom-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d0ddf1, #dbe3f4, #c6d3fb);
+  border-radius: 3px;
+}
+
+/* =========================
+   SNOW EFFECT (GIỮ NGUYÊN)
+========================= */
+.snow,
+.bottom_snow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
