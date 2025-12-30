@@ -116,7 +116,8 @@ if (is_array($parsed) && isset($parsed['amount']) && isset($parsed['category']))
     $type = $parsed['type'];
     $categoryName = trim($parsed['category']);
     $amount = floatval($parsed['amount']);
-    $date = $parsed['date'] ?? date('Y-m-d');
+    $date = date('Y-m-d');
+    // $date = $parsed['date'] ?? date('Y-m-d');
     $tagName = $parsed['tag'] ?? null;
     $walletName = $parsed['wallet'] ?? null;
 
@@ -156,45 +157,45 @@ if (is_array($parsed) && isset($parsed['amount']) && isset($parsed['category']))
     $transactionId = $pdo->lastInsertId();
 
     // 🔗 Nếu là expense thì mới thêm tag
-if ($type === 'expense' && $tagName) {
-    // Tìm hoặc tạo tag
-    $stmt = $pdo->prepare("SELECT id, limit_amount FROM tags WHERE name = ? AND user_id = ?");
-    $stmt->execute([$tagName, $userId]);
-    $tag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$tag) {
-        $stmt = $pdo->prepare("INSERT INTO tags (name, user_id) VALUES (?, ?)");
+    if ($type === 'expense' && $tagName) {
+        // Tìm hoặc tạo tag
+        $stmt = $pdo->prepare("SELECT id, limit_amount FROM tags WHERE name = ? AND user_id = ?");
         $stmt->execute([$tagName, $userId]);
-        $tagId = $pdo->lastInsertId();
-        $limitAmount = 0; // Chưa đặt giới hạn
-    } else {
-        $tagId = $tag['id'];
-        $limitAmount = floatval($tag['limit_amount']);
-    }
+        $tag = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Gắn tag với giao dịch
-    $stmt = $pdo->prepare("INSERT INTO transaction_tags (transaction_id, tag_id) VALUES (?, ?)");
-    $stmt->execute([$transactionId, $tagId]);
+        if (!$tag) {
+            $stmt = $pdo->prepare("INSERT INTO tags (name, user_id) VALUES (?, ?)");
+            $stmt->execute([$tagName, $userId]);
+            $tagId = $pdo->lastInsertId();
+            $limitAmount = 0; // Chưa đặt giới hạn
+        } else {
+            $tagId = $tag['id'];
+            $limitAmount = floatval($tag['limit_amount']);
+        }
 
-    // 💡 Kiểm tra nếu vượt quá giới hạn
-    if ($limitAmount > 0) {
-        // Tổng chi hiện tại của tag đó
-        $stmt = $pdo->prepare("
+        // Gắn tag với giao dịch
+        $stmt = $pdo->prepare("INSERT INTO transaction_tags (transaction_id, tag_id) VALUES (?, ?)");
+        $stmt->execute([$transactionId, $tagId]);
+
+        // 💡 Kiểm tra nếu vượt quá giới hạn
+        if ($limitAmount > 0) {
+            // Tổng chi hiện tại của tag đó
+            $stmt = $pdo->prepare("
             SELECT SUM(t.amount) 
             FROM transactions t
             JOIN transaction_tags tt ON t.id = tt.transaction_id
             WHERE tt.tag_id = ? AND t.user_id = ? AND t.type = 'expense'
         ");
-        $stmt->execute([$tagId, $userId]);
-        $totalSpent = floatval($stmt->fetchColumn());
+            $stmt->execute([$tagId, $userId]);
+            $totalSpent = floatval($stmt->fetchColumn());
 
-        if ($totalSpent > $limitAmount) {
-            echo "⚠️ Giao dịch đã vượt giới hạn chi tiêu cho thẻ *$tagName*. Tổng chi hiện tại: " . number_format($totalSpent, 0, ',', '.') . " / " . number_format($limitAmount, 0, ',', '.') . " VND.\n";
-        } elseif ($totalSpent >= 0.7 * $limitAmount) {
-            echo "🔔 Cảnh báo: Bạn sắp vượt giới hạn cho thẻ *$tagName*. Tổng chi hiện tại: " . number_format($totalSpent, 0, ',', '.') . " / " . number_format($limitAmount, 0, ',', '.') . " VND.\n";
+            if ($totalSpent > $limitAmount) {
+                echo "⚠️ Giao dịch đã vượt giới hạn chi tiêu cho thẻ *$tagName*. Tổng chi hiện tại: " . number_format($totalSpent, 0, ',', '.') . " / " . number_format($limitAmount, 0, ',', '.') . " VND.\n";
+            } elseif ($totalSpent >= 0.7 * $limitAmount) {
+                echo "🔔 Cảnh báo: Bạn sắp vượt giới hạn cho thẻ *$tagName*. Tổng chi hiện tại: " . number_format($totalSpent, 0, ',', '.') . " / " . number_format($limitAmount, 0, ',', '.') . " VND.\n";
+            }
         }
     }
-}
 
     echo "✅ Đã lưu giao dịch trong mục *$categoryName* ngày $date.";
     exit;
@@ -210,31 +211,31 @@ if (preg_match('/^SELECT\s/i', trim($aiContent))) {
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_NUM);
 
-// Nếu không có dữ liệu
-if (!$results || count($results) === 0) {
-    echo "🔍 Không tìm thấy kết quả.";
-    exit;
-}
+        // Nếu không có dữ liệu
+        if (!$results || count($results) === 0) {
+            echo "🔍 Không tìm thấy kết quả.";
+            exit;
+        }
 
-// Nếu chỉ có 1 dòng và 1 cột → kết quả đơn
-if (count($results) === 1 && count($results[0]) === 1) {
-    $sqlResult = $results[0][0];
+        // Nếu chỉ có 1 dòng và 1 cột → kết quả đơn
+        if (count($results) === 1 && count($results[0]) === 1) {
+            $sqlResult = $results[0][0];
 
-    $data['messages'][] = ["role" => "assistant", "content" => $aiContent];
-    $data['messages'][] = ["role" => "user", "content" => "Tôi vừa truy vấn SQL: `$aiContent`. Kết quả là: $sqlResult. Hãy phản hồi kết quả cho người dùng một cách tự nhiên và thân thiện."];
-} else {
-    // Trả về bảng kết quả
-    $sqlResult = $results;
+            $data['messages'][] = ["role" => "assistant", "content" => $aiContent];
+            $data['messages'][] = ["role" => "user", "content" => "Tôi vừa truy vấn SQL: `$aiContent`. Kết quả là: $sqlResult. Hãy phản hồi kết quả cho người dùng một cách tự nhiên và thân thiện."];
+        } else {
+            // Trả về bảng kết quả
+            $sqlResult = $results;
 
-    // Chuyển mảng kết quả thành bảng văn bản để gửi lại AI
-    $resultText = "Kết quả truy vấn:\n";
-    foreach ($results as $row) {
-        $resultText .= implode(" | ", $row) . "\n";
-    }
+            // Chuyển mảng kết quả thành bảng văn bản để gửi lại AI
+            $resultText = "Kết quả truy vấn:\n";
+            foreach ($results as $row) {
+                $resultText .= implode(" | ", $row) . "\n";
+            }
 
-    $data['messages'][] = ["role" => "assistant", "content" => $aiContent];
-    $data['messages'][] = ["role" => "user", "content" => "Tôi vừa truy vấn SQL: `$aiContent`. Kết quả như sau:\n$resultText\nHãy tóm tắt và phản hồi kết quả một cách tự nhiên và thân thiện cho người dùng."];
-}
+            $data['messages'][] = ["role" => "assistant", "content" => $aiContent];
+            $data['messages'][] = ["role" => "user", "content" => "Tôi vừa truy vấn SQL: `$aiContent`. Kết quả như sau:\n$resultText\nHãy tóm tắt và phản hồi kết quả một cách tự nhiên và thân thiện cho người dùng."];
+        }
 
         $ch2 = curl_init('https://openrouter.ai/api/v1/chat/completions');
         curl_setopt_array($ch2, [

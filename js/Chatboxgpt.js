@@ -8,13 +8,14 @@ const imagePreview = document.getElementById("imagePreview");
 const messagesContainer = document.getElementById("chatMessages");
 
 // ✅ Khôi phục lịch sử chat nếu có
-const savedMessages = sessionStorage.getItem("chatMessages");
+const CHAT_KEY = `chatMessages_${USER_ID}`;
+const savedMessages = sessionStorage.getItem(CHAT_KEY);
 if (savedMessages) {
   messagesContainer.innerHTML = savedMessages;
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 function saveMessages() {
-  sessionStorage.setItem("chatMessages", messagesContainer.innerHTML);
+  sessionStorage.setItem(CHAT_KEY, messagesContainer.innerHTML);
 }
 
 // ✅ Điều chỉnh input xuống dòng và gửi tin

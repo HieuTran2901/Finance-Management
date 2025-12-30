@@ -199,33 +199,10 @@ $is_fake_user = isset($users['is_placeholder']) && $users['is_placeholder'] == 1
 <body class="bg-gradient-to-br from-indigo-50 via-white to-purple-100 min-h-screen font-sans antialiased">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="fixed top-0 left-0 w-64 h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 shadow-lg flex flex-col justify-between z-10">
-            <!-- Phần trên cùng -->
-            <div class="p-6">
-                <!-- Logo -->
-                <div class="flex items-center gap-2 mb-8">
-                    <img src="https://img.icons8.com/ios/50/wallet--v1.png" class="w-7 h-7" alt="Logo" />
-                    <span class="text-xl font-bold text-gray-800">FinManager</span>
-                </div>
-                <?php
-
-                if (!$is_fake_user): ?>
-
-                    <!-- Danh sách menu -->
-                    <?php
-                    $current_page = $_SERVER['PHP_SELF'];
-                    renderSidebar($users, $current_page, "../../../pages", "../../../index.php", "../../logout.php");
-                    ?>
-                <?php endif; ?>
-            </div>
-
-            <!-- Đăng xuất -->
-            <div class="p-6 border-t border-gray-200">
-                <a href="../../logout.php" class="flex items-center gap-3 text-red-500 hover:text-red-600 font-medium transition">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
-                </a>
-            </div>
-        </aside>
+        <?php
+        $current_page = $_SERVER['PHP_SELF'];
+        renderSidebar($users, $current_page, "../../../pages", "../../../index.php", "../../logout.php");
+        ?>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6 lg:ml-64">

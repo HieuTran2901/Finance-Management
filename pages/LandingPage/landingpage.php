@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"> <!-- AOS CSS -->
-    <link rel="stylesheet" href="../../css/fadein.css">    <!-- Custom Floating Animations -->
+    <link rel="stylesheet" href="../../css/fadein.css"> <!-- Custom Floating Animations -->
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
 <!-- Modal -->
 <div id="comingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center relative animate-fade-in">
-    <h2 class="text-2xl font-semibold text-indigo-700 mb-3">Thông báo</h2>
-    <p class="text-gray-700 mb-6">Tính năng này đang được phát triển. Vui lòng quay lại sau!</p>
-    <button id="closeModal" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">Đóng</button>
-  </div>
+    <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center relative animate-fade-in">
+        <h2 class="text-2xl font-semibold text-indigo-700 mb-3">Thông báo</h2>
+        <p class="text-gray-700 mb-6">Tính năng này đang được phát triển. Vui lòng quay lại sau!</p>
+        <button id="closeModal" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">Đóng</button>
+    </div>
 </div>
 
 <body class="bg-gray-50 text-gray-800 antialiased"> <!-- antialiased để làm mượt chữ -->
@@ -156,7 +159,7 @@
                         <li>✔ 1 ví cá nhân</li>
                         <li>✔ Hỗ trợ cộng đồng</li>
                     </ul>
-                    <a href="../../dangkydangnhap/login.php" class="mt-8 inline-block w-full bg-indigo-600 text-white py-3 rounded-full hover:bg-indigo-700 transition duration-200 shadow-md font-semibold">Dùng thử ngay</a>
+                    <a href="../login.php" class="mt-8 inline-block w-full bg-indigo-600 text-white py-3 rounded-full hover:bg-indigo-700 transition duration-200 shadow-md font-semibold">Dùng thử ngay</a>
                 </div>
                 <div class="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-8 rounded-xl shadow-2xl border-2 border-indigo-700 flex flex-col transform transition-transform duration-300 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
                     <h3 class="text-2xl font-bold mb-4">Chuyên nghiệp</h3>
@@ -237,7 +240,7 @@
 
         // Optional: Smooth scroll for internal links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
@@ -245,15 +248,15 @@
             });
         });
     </script>
-    
+
     <script>
         const modal = document.getElementById("comingSoonModal");
         const closeModal = document.getElementById("closeModal");
 
         document.querySelectorAll(".js-coming-soon").forEach(btn => {
-            btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            modal.classList.remove("hidden");
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                modal.classList.remove("hidden");
             });
         });
 
@@ -267,12 +270,13 @@
         });
     </script>
     <script>
-        window.addEventListener("pageshow", function (event) {
+        window.addEventListener("pageshow", function(event) {
             if (event.persisted) {
-            window.location.reload();
+                window.location.reload();
             }
         });
     </script>
 
 </body>
+
 </html>
