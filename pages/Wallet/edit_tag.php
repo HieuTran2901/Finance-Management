@@ -143,13 +143,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Chỉnh sửa Tag</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+<body class="flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded shadow w-full max-w-lg">
+    <h1 class="text-xl font-bold mb-1 text-center">
       CHỈNH SỬA TAG
     </h1>
      <?php if (!empty($errors)): ?>
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+      <div class="bg-red-100 text-red-700 p-3 rounded mb-1">
         <?php foreach ($errors as $error): ?>
           <div>- <?= htmlspecialchars($error) ?></div>
         <?php endforeach ?>

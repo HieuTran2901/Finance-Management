@@ -175,9 +175,9 @@ while ($row = $tags_result->fetch_assoc()) {
     });
   </script>
 <?php endif ?>
-<body class=" font-sans min-h-screen flex items-center justify-center m-0 p-0">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center tracking-wide text-gray-900 drop-shadow-sm">
+<body class="flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded shadow w-full max-w-lg">
+    <h1 class="text-xl font-bold mb-4 text-center">
       THÊM GIAO DỊCH
     </h1>
     <form method="POST" enctype="multipart/form-data" >
@@ -233,6 +233,7 @@ while ($row = $tags_result->fetch_assoc()) {
     </div>
 
     <div class="mb-4">
+      <label class="block font-medium mb-1">Ghi chú</label >
       <input type="text" name="note" class="w-full border p-2 rounded"
       value="<?= htmlspecialchars($_POST['note'] ?? '') ?>">
 

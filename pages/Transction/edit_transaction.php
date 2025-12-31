@@ -197,46 +197,84 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <form method="POST" enctype="multipart/form-data">
 
-<input name="category" class="w-full border p-2 mb-3 rounded"
- value="<?= htmlspecialchars($transaction['category_name']) ?>">
+  <div>
+    <label class="block font-medium mb-1">Tên</label>
+    <input name="category" required class="w-full border p-2 rounded"
+      value="<?= htmlspecialchars($transaction['category_name']) ?>">
+  </div>
 
-<select name="wallet_id" class="w-full border p-2 mb-3 rounded" id="wallet">
-<?php while ($w = $wallets_result->fetch_assoc()): ?>
-  <option value="<?= $w['id'] ?>" <?= $w['id']==$transaction['wallet_id']?'selected':'' ?>>
-    <?= htmlspecialchars($w['name']) ?>
-  </option>
-<?php endwhile ?>
-</select>
+  <div>
+    <label class="block font-medium mb-1">Chọn ví</label>
+    <select name="wallet_id" id="wallet_id" required class="w-full border p-2 rounded">
+      <option value="">-- Chọn ví --</option>
+      <?php while ($w = $wallets_result->fetch_assoc()): ?>
+        <option value="<?= $w['id'] ?>" <?= $w['id'] == $transaction['wallet_id'] ? 'selected' : '' ?>>
+          <?= htmlspecialchars($w['name']) ?>
+        </option>
+      <?php endwhile; ?>
+    </select>
+  </div>
 
-<select name="type" id="type" class="w-full border p-2 mb-3 rounded">
-  <option value="expense" <?= $transaction['type']=='expense'?'selected':'' ?>>Chi</option>
-  <option value="income" <?= $transaction['type']=='income'?'selected':'' ?>>Thu</option>
-</select>
+  <div class="flex gap-4">
+    <div class="flex-1">
+      <label class="block font-medium mb-1">Loại giao dịch</label>
+      <select name="type" id="type" class="w-full border p-2 rounded">
+        <option value="expense" <?= $transaction['type'] === 'expense' ? 'selected' : '' ?>>Chi</option>
+        <option value="income" <?= $transaction['type'] === 'income' ? 'selected' : '' ?>>Thu</option>
+      </select>
+    </div>
 
-<input type="number" name="amount" class="w-full border p-2 mb-3 rounded"
- value="<?= $transaction['amount'] ?>">
+    <div class="flex-1">
+      <label class="block font-medium mb-1">Số tiền</label>
+      <input type="number" name="amount" step="0.01" required
+        class="w-full border p-2 rounded"
+        value="<?= $transaction['amount'] ?>">
+    </div>
+  </div>
 
-<input type="datetime-local" name="date"
- value="<?= date('Y-m-d\TH:i', strtotime($transaction['date'])) ?>"
- class="w-full border p-2 mb-3 rounded">
+  <div class="mb-4">
+    <label class="block font-medium mb-1">Ngày giao dịch</label>
+    <input type="datetime-local" name="date" required
+      class="w-full border p-2 rounded"
+      value="<?= date('Y-m-d\TH:i', strtotime($transaction['date'])) ?>">
+  </div>
 
-<input name="note" class="w-full border p-2 mb-3 rounded"
- value="<?= htmlspecialchars($transaction['note']) ?>">
+  <div class="mb-4">
+    <label class="block font-medium mb-1">Ghi chú</label>
+    <input type="text" name="note" class="w-full border p-2 rounded"
+      value="<?= htmlspecialchars($transaction['note']) ?>">
+  </div>
 
-<input type="file" name="photo_receipt" class="w-full border p-2 mb-3 rounded">
+  <div class="mb-4">
+    <label class="block font-medium mb-1">Ảnh hóa đơn</label>
+    <input type="file" name="photo_receipt" class="w-full border p-2 rounded">
+  </div>
 
-<select name="tag" id="tag" class="w-full border p-2 mb-4 rounded">
-  <option value="">-- Chọn tag --</option>
-</select>
+  <select name="tag" id="tag" class="w-full border p-2 mb-4 rounded">
+    <option value="">-- Chọn tag --</option>
+  </select>
 
-<div class="flex justify-end gap-3">
-<button type="button" onclick="window.parent.closeEditTransactionModal()"
- class="px-4 py-2 bg-red-600 text-white rounded">Huỷ</button>
-<button type="submit"
- class="px-4 py-2 bg-blue-600 text-white rounded">Cập nhật</button>
-</div>
+  <div class="flex gap-4 justify-end">
+    <button type="button"
+      onclick="window.parent.closeEditTransactionModal()"
+      class="px-4 py-2 rounded text-white font-semibold
+             bg-gradient-to-r from-red-500 to-red-700
+             hover:from-red-600 hover:to-red-800
+             transition-colors duration-300">
+      Huỷ
+    </button>
+
+    <button type="submit"
+      class="px-4 py-2 rounded text-white font-semibold
+             bg-gradient-to-r from-blue-500 to-blue-700
+             hover:from-blue-600 hover:to-blue-800
+             transition-colors duration-300">
+      Cập nhật
+    </button>
+  </div>
 
 </form>
+
 </div>
 
 <script>
