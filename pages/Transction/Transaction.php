@@ -398,12 +398,9 @@ $users = $result_user->fetch_assoc();
         });
       </script>
 
-      <!-- Font Awesome -->
-      <script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
 
       <!-- Custom Scripts (Modal & Chart) -->
       <script src="../../js/Modal.js"></script>
-      <script src="../../js/Chart.js"></script>
       <script>
         function openTransactionForm() {
           document.getElementById('transactionForm').classList.remove('hidden');
