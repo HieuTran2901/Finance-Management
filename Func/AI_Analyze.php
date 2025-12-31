@@ -16,13 +16,13 @@ if (!$apiKey) {
 }
 
 // ==========================
-// 🔹 LẤY DỮ LIỆU TỪ DATABASE
+// LẤY DỮ LIỆU TỪ DATABASE
 // ==========================
 
-// 1️⃣ Lấy tất cả ví
+// Lấy tất cả ví
 $wallets = SQL_Select($conn, "SELECT * FROM Wallets WHERE user_id = ?", "i", [$users_id]);
 
-// 2️⃣ Lấy tất cả mục tiêu
+// Lấy tất cả mục tiêu
 $goals = SQL_Select($conn, "SELECT * FROM goals WHERE user_id = ?", "i", [$users_id]);
 
 if (empty($wallets) || empty($goals)) {
@@ -31,7 +31,7 @@ if (empty($wallets) || empty($goals)) {
 }
 
 // ==========================
-// 🔹 TÍNH SỐ DƯ THỰC TẾ CỦA TỪNG VÍ
+// TÍNH SỐ DƯ THỰC TẾ CỦA TỪNG VÍ
 // ==========================
 $wallets_str = "";
 $sql_balance = "
@@ -54,7 +54,7 @@ foreach ($wallets as $wallet) {
 }
 
 // ==========================
-// 🔹 CHUẨN BỊ CHUỖI MỤC TIÊU
+// CHUẨN BỊ CHUỖI MỤC TIÊU
 // ==========================
 $goals_str = "";
 foreach ($goals as $goal) {
@@ -65,7 +65,7 @@ foreach ($goals as $goal) {
 }
 
 // ==========================
-// 🔹 PROMPT CHO AI
+// PROMPT CHO AI
 // ==========================
 $prompt = "Bạn là một huấn luyện viên tài chính thông minh. 
 Người dùng có các ví: $wallets_str 
@@ -73,7 +73,7 @@ và các mục tiêu tài chính: $goals_str
 Hãy đưa ra kế hoạch chi tiêu và phân bổ hợp lý để đạt được các mục tiêu, viết chi tiết, dễ hiểu, tích cực và kèm emoji.";
 
 // ==========================
-// 🔹 GỌI API OPENROUTER
+// GỌI API OPENROUTER
 // ==========================
 $payload = [
     "model" => $modal_AI_FREE,
@@ -104,4 +104,3 @@ $message = $result['choices'][0]['message']['content'] ?? "💪 Hãy tiếp tụ
 
 echo json_encode(['message' => $message]);
 exit;
-?>
