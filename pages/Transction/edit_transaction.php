@@ -278,27 +278,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 
 <script>
-const wallet = document.getElementById('wallet');
+const wallet = document.getElementById('wallet_id');
 const tagSelect = document.getElementById('tag');
 const currentTag = <?= json_encode($current_tag) ?>;
 
 function loadTags(walletId) {
+  if (!walletId) return;
+
   tagSelect.innerHTML = '<option value="">-- Chọn tag --</option>';
+
   fetch(`get_tags_by_wallet.php?wallet_id=${walletId}`)
-    .then(r=>r.json())
-    .then(tags=>{
-      tags.forEach(t=>{
-        const o=document.createElement('option');
-        o.value=t;
-        o.textContent=t;
-        if(t===currentTag) o.selected=true;
+    .then(r => r.json())
+    .then(tags => {
+      tags.forEach(t => {
+        const o = document.createElement('option');
+        o.value = t;
+        o.textContent = t;
+        if (t === currentTag) o.selected = true;
         tagSelect.appendChild(o);
       });
     });
 }
 
-wallet.addEventListener('change',()=>loadTags(wallet.value));
+wallet.addEventListener('change', () => loadTags(wallet.value));
 loadTags(wallet.value);
+
 </script>
 
 </body>
